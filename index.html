@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>ClampSound — Slim Desktop Speakers</title>
   <meta name="description" content="A build-in-public project for slim desktop speakers with an integrated desk clamp.">
 
@@ -16,7 +17,13 @@
       --line: #343b33;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
@@ -27,224 +34,539 @@
     }
 
     .wrap {
-      width: min(960px, calc(100% - 40px));
+      width: min(1060px, calc(100% - 40px));
       margin: auto;
     }
 
     header {
-      padding: 22px 0;
+      padding: 20px 0;
       border-bottom: 1px solid var(--line);
+      background: rgba(16, 18, 16, 0.92);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
     }
 
     .brand {
+      color: var(--text);
       font-weight: 800;
       letter-spacing: 0.08em;
+      text-decoration: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    nav a:hover {
+      color: var(--accent);
+    }
+
+    section {
+      padding: 78px 0;
+      border-top: 1px solid var(--line);
     }
 
     .hero {
-      padding: 100px 0 70px;
-      border: 0;
-      max-width: 760px;
+      padding: 105px 0 80px;
+      border-top: 0;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 44px;
+      align-items: center;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--accent);
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
     }
 
     h1 {
       margin: 0 0 24px;
-      font-size: clamp(2.8rem, 8vw, 6rem);
+      font-size: clamp(3.2rem, 7vw, 6.2rem);
       line-height: 0.92;
-      letter-spacing: -0.06em;
+      letter-spacing: -0.07em;
     }
 
     h2 {
-      margin: 0 0 12px;
-      font-size: 1.9rem;
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    h3 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
     }
 
     p {
+      max-width: 740px;
       color: var(--muted);
-      max-width: 720px;
     }
 
-    section {
-      padding: 64px 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .eyebrow {
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
+    .lead {
+      margin: 0;
+      font-size: 1.15rem;
     }
 
     .button {
       display: inline-block;
-      margin: 12px 10px 0 0;
+      margin: 22px 10px 0 0;
       padding: 13px 18px;
       border-radius: 8px;
       background: var(--accent);
       color: #101210;
       font-weight: 800;
       text-decoration: none;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+      background: #d0ff89;
     }
 
     .button.secondary {
-      background: transparent;
       border: 1px solid var(--line);
+      background: transparent;
       color: var(--text);
+    }
+
+    .button.secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-image {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--panel);
+    }
+
+    .hero-image img {
+      display: block;
+      width: 100%;
+      height: 440px;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .section-intro {
+      margin-bottom: 32px;
+    }
+
+    .image-feature {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .image-feature img {
+      display: block;
+      width: 100%;
+      max-height: 620px;
+      object-fit: cover;
+    }
+
+    .image-feature figcaption {
+      padding: 14px 16px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .gallery figure {
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .gallery img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery figure:hover img {
+      transform: scale(1.035);
+    }
+
+    figcaption {
+      padding: 13px 15px;
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
     }
 
     .card {
+      min-height: 185px;
       padding: 22px;
       border: 1px solid var(--line);
       border-radius: 12px;
       background: var(--panel);
     }
 
+    .number {
+      display: block;
+      margin-bottom: 20px;
+      color: var(--accent);
+      font-size: 0.88rem;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+    }
+
     .card p {
       margin-bottom: 0;
+      font-size: 0.95rem;
+    }
+
+    .update {
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--panel);
+    }
+
+    .update-date {
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
     }
 
     .note {
+      margin-top: 20px;
       font-size: 0.9rem;
     }
 
     footer {
-      padding: 40px 0 60px;
+      padding: 42px 0 64px;
       color: var(--muted);
       font-size: 0.9rem;
+    }
+
+    @media (max-width: 850px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-image img {
+        height: auto;
+        max-height: 520px;
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .wrap {
+        width: min(100% - 28px, 1060px);
+      }
+
+      header {
+        position: static;
+      }
+
+      .header-row {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      section {
+        padding: 56px 0;
+      }
+
+      .hero {
+        padding: 64px 0 56px;
+      }
+
+      h1 {
+        font-size: 3.5rem;
+      }
+
+      .gallery,
+      .grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 
 <body>
   <header>
-    <div class="wrap">
-      <div class="brand">CLAMPSOUND / BUILD IN PUBLIC</div>
+    <div class="wrap header-row">
+      <a class="brand" href="#top">CLAMPSOUND</a>
+
+      <nav>
+        <a href="#concept">Concept</a>
+        <a href="#renders">Renders</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#follow">Follow</a>
+      </nav>
     </div>
   </header>
 
-  <main class="wrap">
+  <main id="top">
     <section class="hero">
-      <p class="eyebrow">DESKTOP AUDIO CONCEPT</p>
-      <h1>More sound.<br>Less desk.</h1>
-      <p>
-        I’m developing slim desktop speakers with an integrated,
-        desk-safe clamp—designed to reclaim workspace without moving
-        sound farther away.
-      </p>
-      <a class="button" href="#follow">Follow the build</a>
-      <a class="button secondary" href="#concept">See the concept</a>
+      <div class="wrap hero-grid">
+        <div>
+          <p class="eyebrow">DESKTOP AUDIO CONCEPT</p>
+          <h1>More sound.<br>Less desk.</h1>
+
+          <p class="lead">
+            A slim desktop speaker concept designed to mount beside a monitor,
+            reclaim desk space, and bring near-field audio closer to the listener.
+          </p>
+
+          <a class="button" href="#renders">View the renderings</a>
+          <a class="button secondary" href="#follow">Follow the build</a>
+        </div>
+
+        <figure class="hero-image">
+          <img
+            src="speaker_with_32inch_monitor.png"
+            alt="ClampSound speaker concept positioned beside a 32-inch monitor"
+          >
+        </figure>
+      </div>
     </section>
 
     <section id="concept">
-      <p class="eyebrow">THE IDEA</p>
-      <h2>Desktop speakers that do not occupy your desktop</h2>
-      <p>
-        Traditional desktop speakers take up valuable room beside a monitor.
-        ClampSound explores a slimmer approach: speaker enclosures that attach
-        to the desk edge, with attention to safe clamping, vibration control,
-        cable routing, and near-field sound quality.
-      </p>
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">THE CONCEPT</p>
+          <h2>Speakers that work around your monitor</h2>
+
+          <p>
+            Desktop speakers normally occupy valuable space on either side of a display.
+            This concept explores tall, slim speaker enclosures placed beside a monitor,
+            with a mounting approach intended to reduce the footprint on the desk.
+          </p>
+
+          <p>
+            The current design includes multiple front-facing drivers, a compact side
+            profile, and a separate small driver section. The next phase is to validate
+            enclosure volume, driver selection, mounting safety, vibration control, and
+            real acoustic performance with a physical prototype.
+          </p>
+        </div>
+
+        <figure class="image-feature">
+          <img
+            src="speaker_with_32inch_monitor.png"
+            alt="Full ClampSound speaker concept shown with a 32-inch monitor"
+          >
+          <figcaption>
+            Early concept rendering: slim speakers positioned at the sides of a 32-inch monitor.
+          </figcaption>
+        </figure>
+      </div>
     </section>
 
-    <section>
-      <p class="eyebrow">PROTOTYPE ROADMAP</p>
-      <h2>From concept to a working prototype</h2>
-
-      <div class="grid">
-        <div class="card">
-          <strong>01 — Design</strong>
-          <p>Define dimensions, clamp range, drivers, enclosure volume, and cable routing.</p>
+    <section id="renders">
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">DESIGN RENDERINGS</p>
+          <h2>Early views of the speaker concept</h2>
+          <p>
+            These CAD renderings show the proposed front layout, angled profile,
+            narrow side profile, and intended scale beside a monitor. They represent
+            a work in progress, not a finished or acoustically verified product.
+          </p>
         </div>
 
-        <div class="card">
-          <strong>02 — 3D print</strong>
-          <p>Create the first enclosure and integrated clamp mechanism.</p>
-        </div>
+        <div class="gallery">
+          <figure>
+            <img
+              src="front_view.png"
+              alt="Front view rendering of the slim ClampSound speaker"
+              loading="lazy"
+            >
+            <figcaption>
+              Front view — three larger drivers with a compact upper driver section.
+            </figcaption>
+          </figure>
 
-        <div class="card">
-          <strong>03 — Test</strong>
-          <p>Check desk fit, stability, vibration, usability, and sound quality.</p>
-        </div>
+          <figure>
+            <img
+              src="angle_view.png"
+              alt="Angled rendering of the ClampSound slim speaker"
+              loading="lazy"
+            >
+            <figcaption>
+              Angled view — showing the depth and rounded enclosure profile.
+            </figcaption>
+          </figure>
 
-        <div class="card">
-          <strong>04 — Improve</strong>
-          <p>Share results publicly, collect feedback, and refine the design.</p>
+          <figure>
+            <img
+              src="side_view.png"
+              alt="Side view rendering of the thin ClampSound speaker enclosure"
+              loading="lazy"
+            >
+            <figcaption>
+              Side view — the slim form factor intended for a monitor-side position.
+            </figcaption>
+          </figure>
+
+          <figure>
+            <img
+              src="speaker_with_32inch_monitor.png"
+              alt="Pair of ClampSound concept speakers mounted beside a 32-inch monitor"
+              loading="lazy"
+            >
+            <figcaption>
+              Monitor view — a pair of speakers shown alongside a 32-inch display.
+            </figcaption>
+          </figure>
         </div>
       </div>
     </section>
 
-    <section>
-      <p class="eyebrow">BUILD LOG</p>
-      <h2>Current update</h2>
+    <section id="roadmap">
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">PROTOTYPE ROADMAP</p>
+          <h2>From rendering to working speaker</h2>
+        </div>
 
-      <div class="card">
-        <strong>Update 01 — Concept stage</strong>
-        <p>
-          The project is moving from early community feedback into prototype
-          planning. Next, I will choose a first driver, clamp design, and
-          low-cost 3D-printing route.
-        </p>
+        <div class="grid">
+          <div class="card">
+            <span class="number">01 — DESIGN</span>
+            <h3>Define the system</h3>
+            <p>Confirm dimensions, enclosure volume, drivers, electronics, and mounting method.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">02 — 3D PRINT</span>
+            <h3>Build the enclosure</h3>
+            <p>Create the first printable enclosure and test the practical assembly process.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">03 — TEST</span>
+            <h3>Measure and listen</h3>
+            <p>Evaluate mounting stability, vibration, desk fit, sound quality, and usability.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">04 — REFINE</span>
+            <h3>Improve in public</h3>
+            <p>Share findings, collect feedback, and revise the design through later versions.</p>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <p class="note">
-        New prototype photos, drawings, sound tests, and decisions will be added here.
-      </p>
+    <section id="build-log">
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">BUILD LOG</p>
+          <h2>Current project status</h2>
+        </div>
+
+        <article class="update">
+          <p class="update-date">UPDATE 01 — CONCEPT STAGE</p>
+          <h3>First CAD renderings published</h3>
+          <p>
+            The first speaker layout and monitor-scale concepts are complete.
+            Next steps are to select practical driver sizes, determine the required
+            enclosure volume, develop the mounting design, and create a first
+            3D-printed prototype.
+          </p>
+        </article>
+      </div>
     </section>
 
     <section id="follow">
-      <p class="eyebrow">FOLLOW THE BUILD</p>
-      <h2>Get project updates</h2>
-      <p>
-        Join the email list for occasional updates about prototypes, testing,
-        design choices, and chances to give feedback.
-      </p>
+      <div class="wrap">
+        <p class="eyebrow">FOLLOW THE BUILD</p>
+        <h2>Get future project updates</h2>
 
-      <a class="button" href="mailto:YOUR-EMAIL@example.com?subject=ClampSound%20updates">
-        Contact me to follow
-      </a>
+        <p>
+          I will share prototype progress, design changes, testing results, and
+          opportunities for feedback as this concept becomes a physical build.
+        </p>
 
-      <p class="note">
-        This is a temporary contact button. It can be replaced with a real email-signup form later.
-      </p>
+        <a class="button" href="mailto:YOUR-EMAIL@example.com?subject=ClampSound%20updates">
+          Contact me to follow
+        </a>
+
+        <p class="note">
+          Replace <strong>YOUR-EMAIL@example.com</strong> in the code with an email address
+          you are comfortable making public, or replace this button with an email-list form later.
+        </p>
+      </div>
     </section>
 
-    <section>
-      <p class="eyebrow">SUPPORT</p>
-      <h2>Help fund the first prototype</h2>
-      <p>
-        Optional one-time tips will help cover filament, speaker drivers,
-        electronics, and prototype testing. Tips support development only;
-        they are not pre-orders.
-      </p>
+    <section id="support">
+      <div class="wrap">
+        <p class="eyebrow">SUPPORT</p>
+        <h2>Help fund the first prototype</h2>
 
-      <a class="button secondary" href="#">
-        Tip page coming soon
-      </a>
-    </section>
+        <p>
+          Optional one-time tips may help cover filament, drivers, electronics,
+          prototype tools, and testing. Any support is for development only and
+          is not a pre-order for a finished product.
+        </p>
 
-    <section>
-      <p class="eyebrow">FEEDBACK</p>
-      <h2>Help shape the speaker</h2>
-      <p>
-        What desk thickness should it support? What features matter most to you?
-        Would you prefer a DIY kit, downloadable files, or a finished speaker?
-      </p>
-
-      <a class="button secondary" href="https://www.reddit.com/r/diyaudio/comments/1t87oua/slim_desktop_speaker_with_a_builtin_table_clamp/">
-        Join the Reddit discussion
-      </a>
+        <a class="button secondary" href="#">
+          Tip page coming soon
+        </a>
+      </div>
     </section>
   </main>
 
-  <footer class="wrap">
-    ClampSound is an independent prototype project. © 2026
+  <footer>
+    <div class="wrap">
+      ClampSound is an independent build-in-public speaker concept. © 2026
+    </div>
   </footer>
 </body>
 </html>
