@@ -3,10 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="google-site-verification" content="1Y1KYMqkoAPgHPMUgdKJygOV5ncsDew0a-_1JIXSLZY" />
+  <meta name="google-site-verification" content="1Y1KYMqkoAPgHPMUgdKJygOV5ncsDew0a-_1JIXSLZY">
 
-  <title>ClampSound — Slim Desktop Speakers</title>
-  <meta name="description" content="A build-in-public project for slim desktop speakers with an integrated desk clamp.">
+  <title>ClampSound — Slim Monitor-Side Desktop Speaker Concept</title>
+  <meta
+    name="description"
+    content="ClampSound is a build-in-public project for slim monitor-side desktop speakers. Explore CAD renderings, prototype plans, and the path toward a 3D-printed speaker design."
+  >
 
   <style>
     :root {
@@ -28,10 +31,10 @@
 
     body {
       margin: 0;
+      background: var(--bg);
+      color: var(--text);
       font-family: Arial, Helvetica, sans-serif;
       line-height: 1.6;
-      color: var(--text);
-      background: var(--bg);
     }
 
     .wrap {
@@ -40,19 +43,19 @@
     }
 
     header {
-      padding: 20px 0;
-      border-bottom: 1px solid var(--line);
-      background: rgba(16, 18, 16, 0.92);
       position: sticky;
       top: 0;
       z-index: 10;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      background: rgba(16, 18, 16, 0.92);
       backdrop-filter: blur(10px);
     }
 
     .header-row {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 20px;
     }
 
@@ -65,8 +68,8 @@
 
     nav {
       display: flex;
-      gap: 16px;
       flex-wrap: wrap;
+      gap: 16px;
     }
 
     nav a {
@@ -92,8 +95,8 @@
     .hero-grid {
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
-      gap: 44px;
       align-items: center;
+      gap: 44px;
     }
 
     .eyebrow {
@@ -137,6 +140,7 @@
       display: inline-block;
       margin: 22px 10px 0 0;
       padding: 13px 18px;
+      border: 0;
       border-radius: 8px;
       background: var(--accent);
       color: #101210;
@@ -161,11 +165,17 @@
       color: var(--accent);
     }
 
-    .hero-image {
+    .hero-image,
+    .image-feature,
+    .gallery figure {
       overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 16px;
+      border-radius: 14px;
       background: var(--panel);
+    }
+
+    .hero-image {
+      border-radius: 16px;
     }
 
     .hero-image img {
@@ -180,13 +190,6 @@
       margin-bottom: 32px;
     }
 
-    .image-feature {
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
-    }
-
     .image-feature img {
       display: block;
       width: 100%;
@@ -194,8 +197,8 @@
       object-fit: cover;
     }
 
-    .image-feature figcaption {
-      padding: 14px 16px;
+    figcaption {
+      padding: 13px 15px;
       color: var(--muted);
       font-size: 0.9rem;
     }
@@ -208,10 +211,6 @@
 
     .gallery figure {
       margin: 0;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
     }
 
     .gallery img {
@@ -226,24 +225,22 @@
       transform: scale(1.035);
     }
 
-    figcaption {
-      padding: 13px 15px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
     .grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 16px;
     }
 
-    .card {
-      min-height: 185px;
-      padding: 22px;
+    .card,
+    .update {
       border: 1px solid var(--line);
       border-radius: 12px;
       background: var(--panel);
+    }
+
+    .card {
+      min-height: 185px;
+      padding: 22px;
     }
 
     .number {
@@ -262,9 +259,7 @@
 
     .update {
       padding: 26px;
-      border: 1px solid var(--line);
       border-radius: 14px;
-      background: var(--panel);
     }
 
     .update-date {
@@ -275,9 +270,68 @@
       letter-spacing: 0.08em;
     }
 
-    .note {
-      margin-top: 20px;
-      font-size: 0.9rem;
+    .signup-form {
+      max-width: 620px;
+      margin-top: 28px;
+    }
+
+    .signup-form label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .signup-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .signup-row input {
+      flex: 1;
+      min-width: 0;
+      padding: 14px 15px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      outline: none;
+      background: var(--panel);
+      color: var(--text);
+      font: inherit;
+    }
+
+    .signup-row input:focus {
+      border-color: var(--accent);
+    }
+
+    .signup-row button {
+      padding: 14px 18px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #101210;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 800;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .signup-row button:hover {
+      transform: translateY(-2px);
+      background: #d0ff89;
+    }
+
+    .form-note,
+    .powered-by {
+      margin: 10px 0 0;
+      font-size: 0.85rem;
+    }
+
+    .powered-by a {
+      color: var(--muted);
+    }
+
+    .powered-by a:hover {
+      color: var(--accent);
     }
 
     footer {
@@ -311,8 +365,8 @@
       }
 
       .header-row {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
       }
 
       nav {
@@ -335,69 +389,15 @@
       .grid {
         grid-template-columns: 1fr;
       }
+
+      .signup-row {
+        flex-direction: column;
+      }
+
+      .signup-row button {
+        width: 100%;
+      }
     }
-    .signup-form {
-  max-width: 620px;
-  margin-top: 28px;
-}
-
-.signup-form label {
-  display: block;
-  margin-bottom: 8px;
-  color: var(--text);
-  font-weight: 700;
-}
-
-.signup-row {
-  display: flex;
-  gap: 10px;
-}
-
-.signup-row input {
-  flex: 1;
-  min-width: 0;
-  padding: 14px 15px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  outline: none;
-  background: var(--panel);
-  color: var(--text);
-  font: inherit;
-}
-
-.signup-row input:focus {
-  border-color: var(--accent);
-}
-
-.signup-row button {
-  padding: 14px 18px;
-  border: 0;
-  border-radius: 8px;
-  background: var(--accent);
-  color: #101210;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 800;
-}
-
-.signup-row button:hover {
-  background: #d0ff89;
-}
-
-.form-note {
-  margin: 10px 0 0;
-  font-size: 0.85rem;
-}
-
-@media (max-width: 600px) {
-  .signup-row {
-    flex-direction: column;
-  }
-
-  .signup-row button {
-    width: 100%;
-  }
-}
   </style>
 </head>
 
@@ -406,7 +406,7 @@
     <div class="wrap header-row">
       <a class="brand" href="#top">CLAMPSOUND</a>
 
-      <nav>
+      <nav aria-label="Main navigation">
         <a href="#concept">Concept</a>
         <a href="#renders">Renders</a>
         <a href="#roadmap">Roadmap</a>
@@ -464,6 +464,7 @@
           <img
             src="speaker_with_32inch_monitor.png"
             alt="Full ClampSound speaker concept shown with a 32-inch monitor"
+            loading="lazy"
           >
           <figcaption>
             Early concept rendering: slim speakers positioned at the sides of a 32-inch monitor.
@@ -477,6 +478,7 @@
         <div class="section-intro">
           <p class="eyebrow">DESIGN RENDERINGS</p>
           <h2>Early views of the speaker concept</h2>
+
           <p>
             These CAD renderings show the proposed front layout, angled profile,
             narrow side profile, and intended scale beside a monitor. They represent
@@ -588,51 +590,55 @@
     </section>
 
     <section id="follow">
-  <div class="wrap">
-    <p class="eyebrow">FOLLOW THE BUILD</p>
-    <h2>Get ClampSound updates</h2>
+      <div class="wrap">
+        <p class="eyebrow">FOLLOW THE BUILD</p>
+        <h2>Get ClampSound updates</h2>
 
-    <p>
-      Enter your email to receive occasional updates about new CAD renderings,
-      3D-printed prototypes, testing, design decisions, and opportunities to
-      give feedback. You can unsubscribe at any time.
-    </p>
+        <p>
+          Enter your email to receive occasional updates about new CAD renderings,
+          3D-printed prototypes, testing, design decisions, and opportunities to
+          give feedback. You can unsubscribe at any time.
+        </p>
 
-    <form
-      action="https://buttondown.com/api/emails/embed-subscribe/ClampSound"
-      method="post"
-      class="signup-form"
-    >
-      <label for="bd-email">Email address</label>
-
-      <div class="signup-row">
-        <input
-          id="bd-email"
-          type="email"
-          name="email"
-          placeholder="you@example.com"
-          autocomplete="email"
-          required
+        <form
+          action="https://buttondown.com/api/emails/embed-subscribe/ClampSound"
+          method="post"
+          class="signup-form"
         >
+          <label for="bd-email">Email address</label>
 
-        <button type="submit">Get updates</button>
+          <div class="signup-row">
+            <input
+              id="bd-email"
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            >
+
+            <button type="submit">Get updates</button>
+          </div>
+
+          <input type="hidden" name="embed" value="1">
+
+          <p class="form-note">
+            By subscribing, you agree to receive occasional ClampSound project updates.
+            No spam. Unsubscribe anytime.
+          </p>
+
+          <p class="powered-by">
+            <a
+              href="https://buttondown.com/refer/ClampSound"
+              target="_blank"
+              rel="noopener"
+            >
+              Powered by Buttondown
+            </a>
+          </p>
+        </form>
       </div>
-
-      <input type="hidden" name="embed" value="1">
-
-      <p class="form-note">
-        By subscribing, you agree to receive occasional ClampSound project updates.
-        No spam. Unsubscribe anytime.
-      </p>
-
-      <p class="powered-by">
-        <a href="https://buttondown.com/refer/ClampSound" target="_blank" rel="noopener">
-          Powered by Buttondown
-        </a>
-      </p>
-    </form>
-  </div>
-</section>
+    </section>
 
     <section id="support">
       <div class="wrap">
