@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ClampSound — Slim Desktop Speakers</title>
+  <meta name="description" content="A build-in-public project for slim desktop speakers with an integrated desk clamp.">
+
+  <style>
+    :root {
+      --bg: #101210;
+      --panel: #1a1f1a;
+      --text: #f6f7f2;
+      --muted: #bdc4ba;
+      --accent: #b7ef61;
+      --line: #343b33;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .wrap {
+      width: min(960px, calc(100% - 40px));
+      margin: auto;
+    }
+
+    header {
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.08em;
+    }
+
+    .hero {
+      padding: 100px 0 70px;
+      border: 0;
+      max-width: 760px;
+    }
+
+    h1 {
+      margin: 0 0 24px;
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.9rem;
+    }
+
+    p {
+      color: var(--muted);
+      max-width: 720px;
+    }
+
+    section {
+      padding: 64px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .button {
+      display: inline-block;
+      margin: 12px 10px 0 0;
+      padding: 13px 18px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #101210;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    .card p {
+      margin-bottom: 0;
+    }
+
+    .note {
+      font-size: 0.9rem;
+    }
+
+    footer {
+      padding: 40px 0 60px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="wrap">
+      <div class="brand">CLAMPSOUND / BUILD IN PUBLIC</div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <p class="eyebrow">DESKTOP AUDIO CONCEPT</p>
+      <h1>More sound.<br>Less desk.</h1>
+      <p>
+        I’m developing slim desktop speakers with an integrated,
+        desk-safe clamp—designed to reclaim workspace without moving
+        sound farther away.
+      </p>
+      <a class="button" href="#follow">Follow the build</a>
+      <a class="button secondary" href="#concept">See the concept</a>
+    </section>
+
+    <section id="concept">
+      <p class="eyebrow">THE IDEA</p>
+      <h2>Desktop speakers that do not occupy your desktop</h2>
+      <p>
+        Traditional desktop speakers take up valuable room beside a monitor.
+        ClampSound explores a slimmer approach: speaker enclosures that attach
+        to the desk edge, with attention to safe clamping, vibration control,
+        cable routing, and near-field sound quality.
+      </p>
+    </section>
+
+    <section>
+      <p class="eyebrow">PROTOTYPE ROADMAP</p>
+      <h2>From concept to a working prototype</h2>
+
+      <div class="grid">
+        <div class="card">
+          <strong>01 — Design</strong>
+          <p>Define dimensions, clamp range, drivers, enclosure volume, and cable routing.</p>
+        </div>
+
+        <div class="card">
+          <strong>02 — 3D print</strong>
+          <p>Create the first enclosure and integrated clamp mechanism.</p>
+        </div>
+
+        <div class="card">
+          <strong>03 — Test</strong>
+          <p>Check desk fit, stability, vibration, usability, and sound quality.</p>
+        </div>
+
+        <div class="card">
+          <strong>04 — Improve</strong>
+          <p>Share results publicly, collect feedback, and refine the design.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <p class="eyebrow">BUILD LOG</p>
+      <h2>Current update</h2>
+
+      <div class="card">
+        <strong>Update 01 — Concept stage</strong>
+        <p>
+          The project is moving from early community feedback into prototype
+          planning. Next, I will choose a first driver, clamp design, and
+          low-cost 3D-printing route.
+        </p>
+      </div>
+
+      <p class="note">
+        New prototype photos, drawings, sound tests, and decisions will be added here.
+      </p>
+    </section>
+
+    <section id="follow">
+      <p class="eyebrow">FOLLOW THE BUILD</p>
+      <h2>Get project updates</h2>
+      <p>
+        Join the email list for occasional updates about prototypes, testing,
+        design choices, and chances to give feedback.
+      </p>
+
+      <a class="button" href="mailto:YOUR-EMAIL@example.com?subject=ClampSound%20updates">
+        Contact me to follow
+      </a>
+
+      <p class="note">
+        This is a temporary contact button. It can be replaced with a real email-signup form later.
+      </p>
+    </section>
+
+    <section>
+      <p class="eyebrow">SUPPORT</p>
+      <h2>Help fund the first prototype</h2>
+      <p>
+        Optional one-time tips will help cover filament, speaker drivers,
+        electronics, and prototype testing. Tips support development only;
+        they are not pre-orders.
+      </p>
+
+      <a class="button secondary" href="#">
+        Tip page coming soon
+      </a>
+    </section>
+
+    <section>
+      <p class="eyebrow">FEEDBACK</p>
+      <h2>Help shape the speaker</h2>
+      <p>
+        What desk thickness should it support? What features matter most to you?
+        Would you prefer a DIY kit, downloadable files, or a finished speaker?
+      </p>
+
+      <a class="button secondary" href="https://www.reddit.com/r/diyaudio/comments/1t87oua/slim_desktop_speaker_with_a_builtin_table_clamp/">
+        Join the Reddit discussion
+      </a>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    ClampSound is an independent prototype project. © 2026
+  </footer>
+</body>
+</html>
