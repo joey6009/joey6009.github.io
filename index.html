@@ -593,23 +593,23 @@
     <h2>Get ClampSound updates</h2>
 
     <p>
-      Enter your email to receive occasional updates about new renderings,
-      3D-printed prototypes, sound tests, design decisions, and opportunities
-      to give feedback. You can unsubscribe at any time.
+      Enter your email to receive occasional updates about new CAD renderings,
+      3D-printed prototypes, testing, design decisions, and opportunities to
+      give feedback. You can unsubscribe at any time.
     </p>
 
     <form
-      class="signup-form"
-      action="https://buttondown.com/ClampSound"
+      action="https://buttondown.com/api/emails/embed-subscribe/ClampSound"
       method="post"
+      class="signup-form"
     >
-      <label for="email">Email address</label>
+      <label for="bd-email">Email address</label>
 
       <div class="signup-row">
         <input
-          id="email"
-          name="email"
+          id="bd-email"
           type="email"
+          name="email"
           placeholder="you@example.com"
           autocomplete="email"
           required
@@ -622,7 +622,13 @@
 
       <p class="form-note">
         By subscribing, you agree to receive occasional ClampSound project updates.
-        No spam, and you can unsubscribe anytime.
+        No spam. Unsubscribe anytime.
+      </p>
+
+      <p class="powered-by">
+        <a href="https://buttondown.com/refer/ClampSound" target="_blank" rel="noopener">
+          Powered by Buttondown
+        </a>
       </p>
     </form>
   </div>
