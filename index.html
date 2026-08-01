@@ -336,6 +336,68 @@
         grid-template-columns: 1fr;
       }
     }
+    .signup-form {
+  max-width: 620px;
+  margin-top: 28px;
+}
+
+.signup-form label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.signup-row {
+  display: flex;
+  gap: 10px;
+}
+
+.signup-row input {
+  flex: 1;
+  min-width: 0;
+  padding: 14px 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  outline: none;
+  background: var(--panel);
+  color: var(--text);
+  font: inherit;
+}
+
+.signup-row input:focus {
+  border-color: var(--accent);
+}
+
+.signup-row button {
+  padding: 14px 18px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #101210;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.signup-row button:hover {
+  background: #d0ff89;
+}
+
+.form-note {
+  margin: 10px 0 0;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 600px) {
+  .signup-row {
+    flex-direction: column;
+  }
+
+  .signup-row button {
+    width: 100%;
+  }
+}
   </style>
 </head>
 
@@ -526,25 +588,45 @@
     </section>
 
     <section id="follow">
-      <div class="wrap">
-        <p class="eyebrow">FOLLOW THE BUILD</p>
-        <h2>Get future project updates</h2>
+  <div class="wrap">
+    <p class="eyebrow">FOLLOW THE BUILD</p>
+    <h2>Get ClampSound updates</h2>
 
-        <p>
-          I will share prototype progress, design changes, testing results, and
-          opportunities for feedback as this concept becomes a physical build.
-        </p>
+    <p>
+      Enter your email to receive occasional updates about new renderings,
+      3D-printed prototypes, sound tests, design decisions, and opportunities
+      to give feedback. You can unsubscribe at any time.
+    </p>
 
-        <a class="button" href="mailto:YOUR-EMAIL@example.com?subject=ClampSound%20updates">
-          Contact me to follow
-        </a>
+    <form
+      class="signup-form"
+      action="https://buttondown.com/ClampSound"
+      method="post"
+    >
+      <label for="email">Email address</label>
 
-        <p class="note">
-          Replace <strong>YOUR-EMAIL@example.com</strong> in the code with an email address
-          you are comfortable making public, or replace this button with an email-list form later.
-        </p>
+      <div class="signup-row">
+        <input
+          id="email"
+          name="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+          required
+        >
+
+        <button type="submit">Get updates</button>
       </div>
-    </section>
+
+      <input type="hidden" name="embed" value="1">
+
+      <p class="form-note">
+        By subscribing, you agree to receive occasional ClampSound project updates.
+        No spam, and you can unsubscribe anytime.
+      </p>
+    </form>
+  </div>
+</section>
 
     <section id="support">
       <div class="wrap">
