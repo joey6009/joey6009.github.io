@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="zh-Hant" data-lang="zh">
+<html lang="en" data-lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="1Y1KYMqkoAPgHPMUgdKJygOV5ncsDew0a-_1JIXSLZY">
   <meta name="theme-color" content="#fbfaf8">
 
-  <title>ClampSound — 立在螢幕旁的桌面喇叭 | A slim speaker that stands beside your monitor</title>
+  <title>ClampSound — A slim speaker that stands beside your monitor</title>
   <meta name="description" content="ClampSound 是一個公開開發中的桌面喇叭：夾在桌緣、立在螢幕兩側，把桌面空出來，讓高音剛好在耳朵高度。ClampSound is a build-in-public desktop speaker that clamps to your desk and stands beside your monitor.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,6 +41,7 @@
     }
 
     html[data-lang="zh"] .en,
+    html[data-lang="zhs"] .en,
     html[data-lang="en"] .zh { display: none !important; }
 
     a { color: inherit; }
@@ -304,8 +305,9 @@
         <a href="#about"><span class="zh">關於</span><span class="en">About</span></a>
       </nav>
       <div class="lang-toggle" role="group" aria-label="Language">
-        <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
-        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        <button type="button" data-set-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-set-lang="zh" aria-pressed="false" lang="zh-Hant">繁中</button>
+        <button type="button" data-set-lang="zhs" aria-pressed="false" lang="zh-Hans">简中</button>
       </div>
       <a class="btn primary small" href="#follow"><span class="zh">追蹤開發</span><span class="en">Follow</span></a>
     </div>
@@ -684,22 +686,61 @@
   <script>
     (function () {
       var root = document.documentElement;
+      var T = '並佔來個側內兩劃動卻參單嘗圖墊夠夾學實寬專對幾廣後從應懸擇擬擴擾換搶數敗於時書會構標樣機檔檢歡決沒測準漸灣為獨產畫發盤確穩積稱約細結給經綠緣繪續纖聲聽腦腳與著藍螢裝裡製見規訂計討記設試該誌調論謝證議販買蹤軟轉這進選還邊鋁錄鍵長閉開間閱關階際隨電霧響頂項須預頻顆題餘饋驗體麼點齊問師桿', S = '并占来个侧内两划动却参单尝图垫够夹学实宽专对几广后从应悬择拟扩扰换抢数败于时书会构标样机档检欢决没测准渐湾为独产画发盘确稳积称约细结给经绿缘绘续纤声听脑脚与着蓝萤装里制见规订计讨记设试该志调论谢证议贩买踪软转这进选还边铝录键长闭开间阅关阶际随电雾响顶项须预频颗题余馈验体么点齐问师杆';
+      var MAP = {};
+      for (var i = 0; i < T.length; i++) MAP[T[i]] = S[i];
+      var PHRASES = [['螢幕', '屏幕'], ['吋', '英寸']];
+      function toSimp(t) {
+        PHRASES.forEach(function (p) { t = t.split(p[0]).join(p[1]); });
+        var out = '';
+        for (var j = 0; j < t.length; j++) out += MAP[t[j]] || t[j];
+        return out;
+      }
+      window.csConvert = function (t) { return window.csLang === 'zhs' ? toSimp(t) : t; };
+
+      var originals = new Map();
+      function zhTextNodes() {
+        var nodes = [];
+        document.querySelectorAll('.zh').forEach(function (el) {
+          var w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+          while (w.nextNode()) nodes.push(w.currentNode);
+        });
+        return nodes;
+      }
+      function convertPage(simp) {
+        zhTextNodes().forEach(function (n) {
+          if (!originals.has(n)) originals.set(n, n.nodeValue);
+          var orig = originals.get(n);
+          n.nodeValue = simp ? toSimp(orig) : orig;
+        });
+      }
+
+      var TITLES = {
+        en: 'ClampSound — A slim speaker that stands beside your monitor',
+        zh: 'ClampSound — 立在螢幕旁的桌面喇叭',
+        zhs: 'ClampSound — 立在屏幕旁的桌面音箱'
+      };
       var saved = null;
       try { saved = localStorage.getItem('cs-lang'); } catch (e) {}
-      var lang = saved || ((navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en');
+      if (['en', 'zh', 'zhs'].indexOf(saved) < 0) saved = null;
+
       function setLang(l) {
+        window.csLang = l;
         root.setAttribute('data-lang', l);
-        root.setAttribute('lang', l === 'zh' ? 'zh-Hant' : 'en');
+        root.setAttribute('lang', l === 'en' ? 'en' : (l === 'zh' ? 'zh-Hant' : 'zh-Hans'));
+        convertPage(l === 'zhs');
+        document.title = TITLES[l];
         document.querySelectorAll('[data-set-lang]').forEach(function (b) {
           b.setAttribute('aria-pressed', b.getAttribute('data-set-lang') === l ? 'true' : 'false');
         });
         try { localStorage.setItem('cs-lang', l); } catch (e) {}
         if (window.csGiscusLang) window.csGiscusLang(l);
       }
+      window.csSetLang = setLang;
       document.querySelectorAll('[data-set-lang]').forEach(function (b) {
         b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang')); });
       });
-      setLang(lang);
+      setLang(saved || 'en');
     })();
   </script>
 
@@ -727,7 +768,8 @@
       };
       var slot = document.getElementById('giscus-slot');
       if (!slot || !GISCUS.categoryId) return;
-      var lang = document.documentElement.getAttribute('data-lang') === 'zh' ? 'zh-TW' : 'en';
+      var GL = { en: 'en', zh: 'zh-TW', zhs: 'zh-CN' };
+      var lang = GL[document.documentElement.getAttribute('data-lang')] || 'en';
       var s = document.createElement('script');
       s.src = 'https://giscus.app/client.js';
       s.setAttribute('data-repo', GISCUS.repo);
@@ -749,7 +791,7 @@
       if (fb) fb.style.marginTop = '20px';
       window.csGiscusLang = function (l) {
         var f = document.querySelector('iframe.giscus-frame');
-        if (f) f.contentWindow.postMessage({ giscus: { setConfig: { lang: l === 'zh' ? 'zh-TW' : 'en' } } }, 'https://giscus.app');
+        if (f) f.contentWindow.postMessage({ giscus: { setConfig: { lang: GL[l] || 'en' } } }, 'https://giscus.app');
       };
     })();
   </script>
@@ -1046,7 +1088,7 @@
           { hex: 0xb9a17a, zh: '砂岩米', en: 'Sandstone' }
         ],
         onColor: function (c) {
-          if (heroColor) heroColor.innerHTML = '<span class="zh">' + c.zh + '</span><span class="en">' + c.en + '</span>';
+          if (heroColor) heroColor.innerHTML = '<span class="zh">' + (window.csConvert ? window.csConvert(c.zh) : c.zh) + '</span><span class="en">' + c.en + '</span>';
         }
       });
     }
