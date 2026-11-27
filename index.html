@@ -1,901 +1,733 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant" data-lang="zh">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="google-site-verification" content="1Y1KYMqkoAPgHPMUgdKJygOV5ncsDew0a-_1JIXSLZY">
+  <meta name="theme-color" content="#fbfaf8">
 
-  <title>ClampSound — Slim Monitor-Side Desktop Speaker Concept</title>
-  <meta name="description" content="ClampSound is a build-in-public project for slim, desk-clamped speakers that sit beside your monitor. Explore the interactive 3D design, driver lineup, and the path toward a 3D-printed active speaker.">
+  <title>ClampSound — 立在螢幕旁的桌面喇叭 | A slim speaker that stands beside your monitor</title>
+  <meta name="description" content="ClampSound 是一個公開開發中的桌面喇叭：夾在桌緣、立在螢幕兩側，把桌面空出來，讓高音剛好在耳朵高度。ClampSound is a build-in-public desktop speaker that clamps to your desk and stands beside your monitor.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #101210;
-      --panel: #1a1f1a;
-      --text: #f6f7f2;
-      --muted: #bdc4ba;
-      --accent: #b7ef61;
-      --line: #343b33;
+      --bg: #fbfaf8;
+      --surface: #f2f0eb;
+      --surface-2: #ffffff;
+      --ink: #141414;
+      --muted: #5d5a55;
+      --soft: #8a867f;
+      --line: #e3e0d9;
+      --accent: #b4532a;
+      --radius: 14px;
+      --font: "Inter", "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.6;
+      color: var(--ink);
+      font-family: var(--font);
+      font-size: 17px;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .wrap {
-      width: min(1060px, calc(100% - 40px));
-      margin: auto;
-    }
+    html[data-lang="zh"] .en,
+    html[data-lang="en"] .zh { display: none !important; }
 
+    a { color: inherit; }
+    img { max-width: 100%; display: block; }
+
+    .wrap { width: min(1180px, calc(100% - 48px)); margin: 0 auto; }
+    .narrow { max-width: 720px; }
+
+    .skip {
+      position: absolute; left: -999px; top: 8px;
+      background: var(--ink); color: #fff; padding: 8px 14px; border-radius: 8px; z-index: 100;
+    }
+    .skip:focus { left: 12px; }
+
+    /* Header */
     header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 20px 0;
+      position: sticky; top: 0; z-index: 20;
+      background: rgba(251, 250, 248, 0.9);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
-      background: rgba(16, 18, 16, 0.92);
-      backdrop-filter: blur(10px);
     }
-
-    .header-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px;
+    .header-row { display: flex; align-items: center; gap: 28px; height: 68px; }
+    .logo {
+      font-weight: 700; letter-spacing: 0.18em; font-size: 0.95rem;
+      text-decoration: none; white-space: nowrap;
     }
-
-    .brand {
-      color: var(--text);
-      font-weight: 800;
-      letter-spacing: 0.08em;
-      text-decoration: none;
+    nav.main { display: flex; gap: 24px; margin-left: auto; }
+    nav.main a {
+      font-size: 0.9rem; color: var(--muted); text-decoration: none; white-space: nowrap;
     }
-
-    nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 16px;
+    nav.main a:hover { color: var(--ink); }
+    .lang-toggle {
+      display: flex; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--surface-2);
     }
-
-    nav a {
-      color: var(--muted);
-      font-size: 0.9rem;
-      text-decoration: none;
+    .lang-toggle button {
+      border: 0; background: transparent; padding: 4px 11px; border-radius: 999px;
+      font: inherit; font-size: 0.8rem; color: var(--muted); cursor: pointer;
     }
-
-    nav a:hover {
-      color: var(--accent);
+    .lang-toggle button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 22px; border-radius: 999px;
+      font: inherit; font-size: 0.95rem; font-weight: 500;
+      text-decoration: none; cursor: pointer; border: 1px solid var(--ink);
+      transition: background .2s ease, color .2s ease, transform .2s ease;
     }
-
-    section {
-      padding: 78px 0;
-      border-top: 1px solid var(--line);
-    }
-
-    .hero {
-      padding: 105px 0 80px;
-      border-top: 0;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      align-items: center;
-      gap: 44px;
-    }
+    .btn.primary { background: var(--ink); color: #fff; }
+    .btn.primary:hover { background: #333; }
+    .btn.ghost { background: transparent; color: var(--ink); }
+    .btn.ghost:hover { background: var(--ink); color: #fff; }
+    .btn.small { padding: 8px 16px; font-size: 0.85rem; }
 
     .eyebrow {
-      margin: 0 0 14px;
-      color: var(--accent);
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.13em;
+      margin: 0 0 14px; color: var(--accent);
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase;
     }
+    h1, h2, h3 { margin: 0; font-weight: 700; letter-spacing: -0.02em; }
+    h1 { font-size: clamp(2.8rem, 6.4vw, 5.4rem); line-height: 1.02; letter-spacing: -0.04em; }
+    h2 { font-size: clamp(1.9rem, 3.6vw, 2.9rem); line-height: 1.12; }
+    h3 { font-size: 1.15rem; line-height: 1.35; }
+    p { color: var(--muted); margin: 0 0 1em; }
+    .lead { font-size: 1.15rem; }
 
-    h1 {
-      margin: 0 0 24px;
-      font-size: clamp(3.2rem, 7vw, 6.2rem);
-      line-height: 0.92;
-      letter-spacing: -0.07em;
-    }
+    section { padding: 110px 0; }
+    .section-head { margin-bottom: 56px; }
+    .section-head p { max-width: 640px; }
 
-    h2 {
-      margin: 0 0 14px;
-      font-size: clamp(2rem, 4vw, 3rem);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-    }
-
-    h3 {
-      margin: 0 0 6px;
-      font-size: 1.05rem;
-    }
-
-    p {
-      max-width: 740px;
-      color: var(--muted);
-    }
-
-    .lead {
-      margin: 0;
-      font-size: 1.15rem;
-    }
-
-    .button {
-      display: inline-block;
-      margin: 22px 10px 0 0;
-      padding: 13px 18px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #101210;
-      font-weight: 800;
-      text-decoration: none;
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .button:hover {
-      transform: translateY(-2px);
-      background: #d0ff89;
-    }
-
-    .button.secondary {
-      border: 1px solid var(--line);
-      background: transparent;
-      color: var(--text);
-    }
-
-    .button.secondary:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .hero-image,
-    .image-feature,
-    .gallery figure,
-    .viewer-frame {
+    /* Hero */
+    .hero { padding: 48px 0 40px; }
+    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; }
+    .hero h1 { margin-bottom: 26px; }
+    .hero .lead { max-width: 500px; margin-bottom: 34px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-stage {
+      position: relative; height: 620px; border-radius: 24px;
+      background: radial-gradient(ellipse at 50% 60%, #ffffff 0%, var(--surface) 70%);
       overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: var(--panel);
+    }
+    .hero-stage .viewer { position: absolute; inset: 0; cursor: grab; touch-action: pan-y; }
+    .hero-tag {
+      position: absolute; left: 20px; bottom: 18px;
+      font-size: 0.8rem; color: var(--soft);
+    }
+    .status-pill {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 6px 12px; border-radius: 999px; background: var(--surface);
+      font-size: 0.8rem; color: var(--muted); margin-bottom: 22px;
+    }
+    .status-pill::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+
+    /* Purpose */
+    .purpose { background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 64px; }
+    .compare figure {
+      margin: 0; padding: 28px; border-radius: var(--radius); background: var(--surface);
+    }
+    .compare figcaption { margin-top: 16px; font-size: 0.95rem; color: var(--muted); }
+    .compare figcaption strong { display: block; color: var(--ink); font-size: 1.05rem; margin-bottom: 4px; }
+    .compare svg { width: 100%; height: auto; display: block; }
+    .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .three .num { font-size: 0.8rem; font-weight: 700; color: var(--accent); letter-spacing: 0.12em; margin-bottom: 14px; display: block; }
+    .three h3 { margin-bottom: 10px; }
+
+    /* Explore */
+    .explore-grid { display: grid; grid-template-columns: 380px 1fr; gap: 32px; align-items: stretch; }
+    .chapters { display: flex; flex-direction: column; gap: 10px; }
+    .chapter {
+      text-align: left; border: 1px solid var(--line); border-radius: var(--radius);
+      background: var(--surface-2); padding: 20px 22px; cursor: pointer; font: inherit; color: inherit;
+      transition: border-color .2s ease, background .2s ease;
+    }
+    .chapter:hover { border-color: #c9c5bc; }
+    .chapter[aria-pressed="true"] { border-color: var(--ink); background: var(--surface-2); box-shadow: 0 1px 0 var(--ink) inset, 0 -1px 0 var(--ink) inset; }
+    .chapter .k { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; color: var(--soft); display: block; margin-bottom: 6px; }
+    .chapter[aria-pressed="true"] .k { color: var(--accent); }
+    .chapter h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .chapter p { font-size: 0.92rem; margin: 0; }
+    .explore-stage {
+      position: relative; border-radius: 24px; background: var(--surface); min-height: 640px; overflow: hidden;
+    }
+    .explore-stage .viewer { position: absolute; inset: 0; cursor: grab; touch-action: pan-y; }
+    .stage-controls {
+      position: absolute; left: 16px; right: 16px; bottom: 16px;
+      display: flex; flex-wrap: wrap; align-items: center; gap: 14px; justify-content: space-between;
+      font-size: 0.85rem; color: var(--muted);
+    }
+    .stage-controls label {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.85); padding: 6px 14px; border-radius: 999px;
+    }
+    .stage-controls input[type="range"] { width: 130px; accent-color: var(--ink); }
+    .hint { background: rgba(255,255,255,0.85); padding: 6px 14px; border-radius: 999px; }
+
+    /* Specs */
+    .specs { background: var(--surface-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .spec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 64px; }
+    .spec-row { display: grid; grid-template-columns: 150px 1fr; gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .spec-row dt { font-size: 0.9rem; color: var(--soft); }
+    .spec-row dd { margin: 0; font-size: 0.98rem; }
+    .spec-note { margin-top: 32px; font-size: 0.9rem; }
+
+    /* Progress */
+    .timeline { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stage-card {
+      border-radius: var(--radius); background: var(--surface-2); border: 1px solid var(--line); padding: 26px 24px 28px;
+    }
+    .stage-card.now { border-color: var(--ink); }
+    .stage-card .tag {
+      display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+      padding: 3px 10px; border-radius: 999px; background: var(--surface); color: var(--soft); margin-bottom: 18px;
+    }
+    .stage-card.now .tag { background: var(--ink); color: #fff; }
+    .stage-card.done .tag { background: #e7efe3; color: #3b6d11; }
+    .stage-card h3 { margin-bottom: 8px; }
+    .stage-card p { font-size: 0.92rem; margin: 0; }
+
+    /* Evolution */
+    .evo { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .evo figure { margin: 0; border-radius: var(--radius); overflow: hidden; background: var(--surface); }
+    .evo img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+    .evo .v2 { position: relative; aspect-ratio: 16 / 10; }
+    .evo .v2 .viewer { position: absolute; inset: 0; }
+    .evo figcaption { padding: 16px 20px; font-size: 0.92rem; color: var(--muted); }
+    .evo figcaption strong { color: var(--ink); margin-right: 6px; }
+    .changes { margin-top: 40px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px 40px; padding: 0; list-style: none; }
+    .changes li { padding-left: 22px; position: relative; color: var(--muted); }
+    .changes li::before { content: "→"; position: absolute; left: 0; color: var(--accent); }
+
+    /* Log */
+    .log-list { display: flex; flex-direction: column; gap: 0; border-top: 1px solid var(--line); }
+    .log-item { display: grid; grid-template-columns: 220px 1fr; gap: 32px; padding: 36px 0; border-bottom: 1px solid var(--line); }
+    .log-meta { font-size: 0.85rem; color: var(--soft); }
+    .log-meta strong { display: block; color: var(--accent); font-size: 0.78rem; letter-spacing: 0.12em; margin-bottom: 4px; }
+    .log-item h3 { font-size: 1.3rem; margin-bottom: 12px; }
+    .log-item ul { color: var(--muted); padding-left: 20px; margin: 0 0 1em; }
+    .log-item li { margin-bottom: 6px; }
+    .discuss { margin-top: 56px; padding: 36px; border-radius: 24px; background: var(--surface-2); border: 1px solid var(--line); }
+    .discuss-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
+    .discuss-fallback { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* About */
+    .about-grid { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
+    .avatar {
+      width: 180px; height: 180px; border-radius: 50%; background: var(--surface);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3rem; font-weight: 700; color: var(--soft);
     }
 
-    .hero-image {
-      margin: 0;
-      border-radius: 16px;
-    }
-
-    .hero-viewer {
-      width: 100%;
-      height: 440px;
-      cursor: grab;
-      touch-action: pan-y;
-    }
-
-    .section-intro {
-      margin-bottom: 32px;
-    }
-
-    figcaption {
-      padding: 13px 15px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 18px;
-    }
-
-    .gallery figure {
-      margin: 0;
-    }
-
-    .gallery img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 4 / 3;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .gallery figure:hover img {
-      transform: scale(1.035);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-    }
-
-    .grid.three {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    .card,
-    .update {
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--panel);
-    }
-
-    .card {
-      min-height: 185px;
-      padding: 22px;
-    }
-
-    .card.active {
-      border-color: var(--accent);
-    }
-
-    .number {
-      display: block;
-      margin-bottom: 20px;
-      color: var(--accent);
-      font-size: 0.88rem;
-      font-weight: 800;
-      letter-spacing: 0.1em;
-    }
-
-    .status {
-      display: inline-block;
-      margin-bottom: 12px;
-      padding: 3px 9px;
-      border: 1px solid var(--accent);
-      border-radius: 999px;
-      color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
-
-    .card p {
-      margin-bottom: 0;
-      font-size: 0.95rem;
-    }
-
-    .update {
-      padding: 26px;
-      border-radius: 14px;
-    }
-
-    .update + .update {
-      margin-top: 18px;
-    }
-
-    .update-date {
-      margin: 0 0 8px;
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 0.08em;
-    }
-
-    .update ul {
-      max-width: 740px;
-      margin: 0;
-      padding-left: 20px;
-      color: var(--muted);
-    }
-
-    .update li {
-      margin-bottom: 6px;
-    }
-
-    .viewer-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 10px;
-      padding: 14px 15px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .viewer-controls button {
-      padding: 8px 13px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: transparent;
-      color: var(--text);
-      cursor: pointer;
-      font: inherit;
-      font-size: 0.88rem;
-    }
-
-    .viewer-controls button:hover,
-    .viewer-controls button.on {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .viewer-controls label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-left: auto;
-      color: var(--muted);
-      font-size: 0.88rem;
-    }
-
-    .viewer-controls input[type="range"] {
-      width: 140px;
-      accent-color: var(--accent);
-    }
-
-    .main-viewer {
-      width: 100%;
-      height: 520px;
-      cursor: grab;
-      touch-action: pan-y;
-    }
-
-    .spec-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.95rem;
-    }
-
-    .spec-table th,
-    .spec-table td {
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--line);
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .spec-table th {
-      color: var(--accent);
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-    }
-
-    .spec-table td {
-      color: var(--muted);
-    }
-
-    .spec-table td:first-child {
-      color: var(--text);
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--panel);
-    }
-
-    .note {
-      margin-top: 14px;
-      font-size: 0.88rem;
-    }
-
-    .signup-form {
-      max-width: 620px;
-      margin-top: 28px;
-    }
-
-    .signup-form label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text);
-      font-weight: 700;
-    }
-
-    .signup-row {
-      display: flex;
-      gap: 10px;
-    }
-
+    /* Follow */
+    .follow { background: var(--ink); color: #fff; border-radius: 28px; padding: 80px 64px; }
+    .follow .eyebrow { color: #e7a37f; }
+    .follow h2 { color: #fff; margin-bottom: 16px; }
+    .follow p { color: #c9c6c0; max-width: 560px; }
+    .signup { margin-top: 32px; max-width: 560px; }
+    .signup label { display: block; margin-bottom: 10px; font-size: 0.9rem; color: #fff; }
+    .signup-row { display: flex; gap: 10px; }
     .signup-row input {
-      flex: 1;
-      min-width: 0;
-      padding: 14px 15px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      outline: none;
-      background: var(--panel);
-      color: var(--text);
-      font: inherit;
+      flex: 1; min-width: 0; padding: 14px 20px; border-radius: 999px; border: 1px solid #444;
+      background: #1f1f1f; color: #fff; font: inherit; outline: none;
     }
-
-    .signup-row input:focus {
-      border-color: var(--accent);
-    }
-
+    .signup-row input:focus { border-color: #fff; }
     .signup-row button {
-      padding: 14px 18px;
-      border: 0;
-      border-radius: 8px;
-      background: var(--accent);
-      color: #101210;
-      cursor: pointer;
-      font: inherit;
-      font-weight: 800;
-      transition: transform 0.2s ease, background 0.2s ease;
+      padding: 14px 24px; border-radius: 999px; border: 0; background: #fff; color: var(--ink);
+      font: inherit; font-weight: 500; cursor: pointer;
     }
-
-    .signup-row button:hover {
-      transform: translateY(-2px);
-      background: #d0ff89;
+    .signup small { display: block; margin-top: 12px; color: #9b978f; font-size: 0.82rem; }
+    .signup small a { color: #9b978f; }
+    .follow-links { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 12px; }
+    .follow-links a {
+      color: #fff; border: 1px solid #444; border-radius: 999px; padding: 9px 18px;
+      font-size: 0.88rem; text-decoration: none;
     }
+    .follow-links a:hover { border-color: #fff; }
 
-    .form-note,
-    .powered-by {
-      margin: 10px 0 0;
-      font-size: 0.85rem;
+    footer { padding: 56px 0 72px; font-size: 0.85rem; color: var(--soft); }
+    .foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; border-top: 1px solid var(--line); padding-top: 28px; }
+    .foot-row a { color: var(--soft); text-decoration: none; margin-left: 18px; }
+    .foot-row a:hover { color: var(--ink); }
+
+    @media (max-width: 1020px) {
+      nav.main { display: none; }
+      .lang-toggle { margin-left: auto; }
+      .hero-grid, .explore-grid { grid-template-columns: 1fr; }
+      .hero-stage { height: 480px; }
+      .explore-stage { min-height: 520px; }
+      .chapters { display: grid; grid-template-columns: 1fr 1fr; }
+      .timeline { grid-template-columns: 1fr 1fr; }
     }
-
-    .powered-by a {
-      color: var(--muted);
-    }
-
-    .powered-by a:hover {
-      color: var(--accent);
-    }
-
-    footer {
-      padding: 42px 0 64px;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    @media (max-width: 850px) {
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .grid,
-      .grid.three {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .viewer-controls label {
-        margin-left: 0;
-      }
-    }
-
-    @media (max-width: 600px) {
-      .wrap {
-        width: min(100% - 28px, 1060px);
-      }
-
-      header {
-        position: static;
-      }
-
-      .header-row {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      nav {
-        gap: 12px;
-      }
-
-      section {
-        padding: 56px 0;
-      }
-
-      .hero {
-        padding: 64px 0 56px;
-      }
-
-      h1 {
-        font-size: 3.5rem;
-      }
-
-      .hero-viewer {
-        height: 360px;
-      }
-
-      .main-viewer {
-        height: 400px;
-      }
-
-      .gallery,
-      .grid,
-      .grid.three {
-        grid-template-columns: 1fr;
-      }
-
-      .signup-row {
-        flex-direction: column;
-      }
-
-      .signup-row button {
-        width: 100%;
-      }
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      .wrap { width: calc(100% - 32px); }
+      section { padding: 72px 0; }
+      .header-row .btn { display: none; }
+      .compare, .three, .spec-grid, .evo, .changes, .timeline, .chapters { grid-template-columns: 1fr; }
+      .three { gap: 32px; }
+      .hero-stage { height: 400px; }
+      .spec-row { grid-template-columns: 110px 1fr; }
+      .log-item, .about-grid { grid-template-columns: 1fr; gap: 16px; }
+      .avatar { width: 120px; height: 120px; font-size: 2rem; }
+      .follow { padding: 56px 28px; border-radius: 20px; }
+      .signup-row { flex-direction: column; }
+      .discuss { padding: 24px; }
     }
   </style>
 </head>
 
 <body>
+  <a class="skip" href="#main"><span class="zh">跳到主要內容</span><span class="en">Skip to content</span></a>
+
   <header>
     <div class="wrap header-row">
-      <a class="brand" href="#top">CLAMPSOUND</a>
-
-      <nav aria-label="Main navigation">
-        <a href="#concept">Concept</a>
-        <a href="#design">3D design</a>
-        <a href="#specs">Specs</a>
-        <a href="#roadmap">Roadmap</a>
-        <a href="#build-log">Build log</a>
-        <a href="#follow">Follow</a>
+      <a class="logo" href="#top">CLAMPSOUND</a>
+      <nav class="main" aria-label="Main">
+        <a href="#purpose"><span class="zh">設計理念</span><span class="en">Why</span></a>
+        <a href="#explore"><span class="zh">探索設計</span><span class="en">Explore</span></a>
+        <a href="#specs"><span class="zh">規格</span><span class="en">Specs</span></a>
+        <a href="#progress"><span class="zh">開發進度</span><span class="en">Progress</span></a>
+        <a href="#log"><span class="zh">開發日誌</span><span class="en">Build log</span></a>
+        <a href="#about"><span class="zh">關於</span><span class="en">About</span></a>
       </nav>
+      <div class="lang-toggle" role="group" aria-label="Language">
+        <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
+        <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
+      </div>
+      <a class="btn primary small" href="#follow"><span class="zh">追蹤開發</span><span class="en">Follow</span></a>
     </div>
   </header>
 
-  <main id="top">
-    <section class="hero">
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top">
       <div class="wrap hero-grid">
         <div>
-          <p class="eyebrow">DESKTOP AUDIO CONCEPT</p>
-          <h1>More sound.<br>Less desk.</h1>
-
+          <span class="status-pill"><span class="zh">設計階段・公開開發中</span><span class="en">Design stage · Built in public</span></span>
+          <h1>
+            <span class="zh">更多聲音，<br>更少桌面。</span>
+            <span class="en">More sound.<br>Less desk.</span>
+          </h1>
           <p class="lead">
-            A slim, desk-clamped active speaker that stands beside your monitor,
-            reclaims desk space, and puts the tweeter at ear height without a stand.
+            <span class="zh">ClampSound 是一對夾在桌緣、立在螢幕兩側的細長喇叭。桌面完全空出來，高音剛好在耳朵的高度，左右聲道也自然拉開。</span>
+            <span class="en">ClampSound is a pair of slim speakers that clamp to the back of your desk and stand beside your monitor. Your desk stays clear, the tweeters sit at ear height, and the stereo image opens up naturally.</span>
           </p>
-
-          <a class="button" href="#design">Explore the 3D design</a>
-          <a class="button secondary" href="#follow">Follow the build</a>
+          <div class="hero-actions">
+            <a class="btn primary" href="#explore"><span class="zh">探索設計</span><span class="en">Explore the design</span></a>
+            <a class="btn ghost" href="#follow"><span class="zh">追蹤開發進度</span><span class="en">Follow the build</span></a>
+          </div>
         </div>
-
-        <figure class="hero-image">
-          <div id="hero-viewer" class="hero-viewer" role="img" aria-label="Rotating 3D model of the white ClampSound speaker, version 2"></div>
-          <figcaption>Design v2 — drag to rotate.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <section id="concept">
-      <div class="wrap">
-        <div class="section-intro">
-          <p class="eyebrow">THE CONCEPT</p>
-          <h2>Speakers that work around your monitor</h2>
-
-          <p>
-            Desktop speakers normally occupy valuable space on either side of a display.
-            ClampSound is a tall, slim enclosure that clamps to the back edge of the desk
-            and stands beside the monitor, so the desk surface stays clear and the drivers
-            sit close to ear height.
-          </p>
-
-          <p>
-            Version 2 of the design is shaped by feedback from the r/diyaudio community.
-            The front baffle stays only 7 cm wide, while the cabinet widens toward the back
-            to gain volume. Mids and highs face the listener; the bass driver and passive
-            radiators fire from the side, where there is room for them.
-          </p>
-        </div>
-
-        <div class="grid three">
-          <div class="card">
-            <span class="number">FRONT</span>
-            <h3>Compact MTM</h3>
-            <p>A 1" tweeter between two 2" midrange drivers on a 7 cm baffle, symmetric around ear height.</p>
-          </div>
-
-          <div class="card">
-            <span class="number">SIDE</span>
-            <h3>Woofer + 2 passive radiators</h3>
-            <p>A 4" woofer with two 4" passive radiators firing sideways, crossed over low enough that the bass is not directional.</p>
-          </div>
-
-          <div class="card">
-            <span class="number">SHAPE</span>
-            <h3>Trapezoid cabinet</h3>
-            <p>Narrow at the front, wider at the back: more volume and depth for the woofer, with the side drivers angled slightly forward.</p>
-          </div>
-
-          <div class="card">
-            <span class="number">ACTIVE</span>
-            <h3>DSP crossover</h3>
-            <p>Each driver group gets its own amplifier channel. Crossovers, EQ, and bass protection are tuned in software.</p>
-          </div>
-
-          <div class="card">
-            <span class="number">MOUNT</span>
-            <h3>Desk clamp</h3>
-            <p>A clamp on the back edge of the desk holds each speaker, with adjustable height and toe-in.</p>
-          </div>
-
-          <div class="card">
-            <span class="number">BUILD</span>
-            <h3>3D printed</h3>
-            <p>The enclosure is printed in two sections with a removable front baffle, so drivers can be swapped during testing.</p>
-          </div>
+        <div class="hero-stage">
+          <div class="viewer" id="hero-viewer" role="img" aria-label="ClampSound 3D model"></div>
+          <span class="hero-tag"><span class="zh">設計 v2・可拖曳旋轉</span><span class="en">Design v2 · drag to rotate</span></span>
         </div>
       </div>
     </section>
 
-    <section id="design">
+    <!-- PURPOSE -->
+    <section class="purpose" id="purpose">
       <div class="wrap">
-        <div class="section-intro">
-          <p class="eyebrow">INTERACTIVE 3D DESIGN</p>
-          <h2>Design v2, in your browser</h2>
-
+        <div class="section-head">
+          <p class="eyebrow"><span class="zh">為什麼要做 ClampSound</span><span class="en">Why ClampSound</span></p>
+          <h2>
+            <span class="zh">桌面喇叭，不該跟你搶桌面。</span>
+            <span class="en">Desktop speakers shouldn't fight you for your desk.</span>
+          </h2>
           <p>
-            Rotate the model, set it on the desk next to a 32-inch monitor, change the toe-in,
-            or turn on X-ray to see how the drivers and the sealed midrange chamber fit inside.
-            Driver sizes follow the real specification sheets. This shows the intended final
-            look; the first prototype will use simple front-mounted drivers for easy testing.
+            <span class="zh">一般的書架喇叭放在螢幕兩旁，會佔掉鍵盤和滑鼠旁邊最好用的位置；高度又太低，聲音是對著你的胸口而不是耳朵，往往還得另外買腳架墊高。</span>
+            <span class="en">Bookshelf speakers next to a monitor take the most useful space on your desk. They also sit too low, aiming at your chest instead of your ears, so many people end up buying stands as well.</span>
           </p>
         </div>
 
-        <div class="viewer-frame">
-          <div class="viewer-controls" id="viewer-controls">
-            <button type="button" data-mode="single" class="on">Single speaker</button>
-            <button type="button" data-mode="front">Front</button>
-            <button type="button" data-mode="pair">On the desk</button>
-            <button type="button" id="xray-btn">X-ray: off</button>
-            <label for="toe">Toe-in <input id="toe" type="range" min="0" max="35" step="1" value="25"> <span id="toe-out">25°</span></label>
+        <div class="compare">
+          <figure>
+            <svg viewBox="0 0 400 230" role="img" aria-label="Top view of a desk with bookshelf speakers">
+              <rect x="20" y="20" width="360" height="190" rx="6" fill="#ffffff" stroke="#d8d4cb"/>
+              <rect x="120" y="34" width="160" height="12" rx="3" fill="#2b2b2b"/>
+              <rect x="185" y="46" width="30" height="16" rx="2" fill="#b9b5ad"/>
+              <rect x="40" y="40" width="58" height="62" rx="4" fill="#d9d5cc" stroke="#b9b5ad"/>
+              <rect x="302" y="40" width="58" height="62" rx="4" fill="#d9d5cc" stroke="#b9b5ad"/>
+              <rect x="135" y="140" width="130" height="38" rx="5" fill="#ece9e2" stroke="#d0ccc3"/>
+              <rect x="285" y="148" width="26" height="36" rx="12" fill="#ece9e2" stroke="#d0ccc3"/>
+              <rect x="40" y="40" width="58" height="62" rx="4" fill="none" stroke="#b4532a" stroke-dasharray="4 3"/>
+              <rect x="302" y="40" width="58" height="62" rx="4" fill="none" stroke="#b4532a" stroke-dasharray="4 3"/>
+            </svg>
+            <figcaption>
+              <strong><span class="zh">一般書架喇叭</span><span class="en">Typical bookshelf speakers</span></strong>
+              <span class="zh">佔用桌面、高度偏低，常常還要加腳架。</span>
+              <span class="en">Take up desk space, sit too low, often need stands.</span>
+            </figcaption>
+          </figure>
+          <figure>
+            <svg viewBox="0 0 400 230" role="img" aria-label="Top view of a desk with ClampSound speakers">
+              <rect x="20" y="20" width="360" height="190" rx="6" fill="#ffffff" stroke="#d8d4cb"/>
+              <rect x="120" y="34" width="160" height="12" rx="3" fill="#2b2b2b"/>
+              <rect x="185" y="46" width="30" height="16" rx="2" fill="#b9b5ad"/>
+              <g transform="rotate(25 106 40)"><path d="M100 30 h12 l6 22 h-24 z" fill="#ffffff" stroke="#141414" stroke-width="1.5"/></g>
+              <g transform="rotate(-25 294 40)"><path d="M288 30 h12 l6 22 h-24 z" fill="#ffffff" stroke="#141414" stroke-width="1.5"/></g>
+              <circle cx="104" cy="24" r="4" fill="#b4532a"/>
+              <circle cx="296" cy="24" r="4" fill="#b4532a"/>
+              <rect x="135" y="140" width="130" height="38" rx="5" fill="#ece9e2" stroke="#d0ccc3"/>
+              <rect x="285" y="148" width="26" height="36" rx="12" fill="#ece9e2" stroke="#d0ccc3"/>
+            </svg>
+            <figcaption>
+              <strong>ClampSound</strong>
+              <span class="zh">夾在桌子後緣，桌面上只剩一個夾具的位置；喇叭可以調高度和角度，直接對準耳朵。</span>
+              <span class="en">Clamped to the back edge of the desk, leaving only the clamp's footprint. Height and angle adjust to point straight at your ears.</span>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="three">
+          <div>
+            <span class="num">01</span>
+            <h3><span class="zh">把桌面還給你</span><span class="en">Give your desk back</span></h3>
+            <p><span class="zh">喇叭立在螢幕兩旁的空間，靠桌夾固定，桌面上幾乎不佔位置。</span><span class="en">The speakers live in the empty space beside your monitor, held by a desk clamp, with almost no footprint.</span></p>
           </div>
-          <div id="main-viewer" class="main-viewer" role="img" aria-label="Interactive 3D model of the ClampSound speaker with view controls"></div>
-          <figcaption>
-            Drag to rotate, scroll or pinch to zoom. In X-ray mode, the green block is the sealed midrange chamber.
-          </figcaption>
+          <div>
+            <span class="num">02</span>
+            <h3><span class="zh">高音對準耳朵</span><span class="en">Tweeters at ear height</span></h3>
+            <p><span class="zh">不需要腳架，夾具就能把高音調到耳朵的高度，角度也能轉向你。</span><span class="en">No stands needed. The clamp sets the tweeter at ear height and angles it toward you.</span></p>
+          </div>
+          <div>
+            <span class="num">03</span>
+            <h3><span class="zh">真正的立體聲</span><span class="en">Real stereo separation</span></h3>
+            <p><span class="zh">放在螢幕下方的 soundbar 左右靠得太近；立在螢幕兩側，左右聲道自然分開。</span><span class="en">A soundbar under the monitor keeps left and right too close. Standing beside the screen, the channels separate naturally.</span></p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section id="specs">
+    <!-- EXPLORE -->
+    <section id="explore">
       <div class="wrap">
-        <div class="section-intro">
-          <p class="eyebrow">PLANNED SPECIFICATIONS</p>
-          <h2>What goes inside</h2>
-
+        <div class="section-head">
+          <p class="eyebrow"><span class="zh">探索設計</span><span class="en">Explore the design</span></p>
+          <h2>
+            <span class="zh">纖細的正面，藏著完整的三音路。</span>
+            <span class="en">A slim front, with a full 3-way system behind it.</span>
+          </h2>
           <p>
-            These are design targets, not measured results. Everything below will be
-            checked with real measurements and may change as testing goes on.
+            <span class="zh">點選左邊的項目，看每個設計決定背後的理由。模型中的單體尺寸依照實際規格表繪製。</span>
+            <span class="en">Pick a topic on the left to see the reasoning behind each design decision. Driver sizes follow the real specification sheets.</span>
           </p>
         </div>
 
-        <div class="table-wrap">
-          <table class="spec-table">
-            <thead>
-              <tr>
-                <th>ITEM</th>
-                <th>PLAN (PER SPEAKER)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Size</td>
-                <td>420 mm tall × 190 mm deep; 70 mm wide at the front, 120 mm at the back</td>
-              </tr>
-              <tr>
-                <td>Tweeter</td>
-                <td>1 × Dayton Audio ND25FA-4, 1" soft dome</td>
-              </tr>
-              <tr>
-                <td>Midrange</td>
-                <td>2 × Dayton Audio DMA58-8, 2" aluminum cone, in a sealed chamber of about 0.5 L</td>
-              </tr>
-              <tr>
-                <td>Woofer</td>
-                <td>1 × Dayton Audio ND105-4, 4" aluminum cone, side-firing</td>
-              </tr>
-              <tr>
-                <td>Passive radiators</td>
-                <td>2 × Dayton Audio ND105-PR, 4", side-firing, bass box of about 5 L</td>
-              </tr>
-              <tr>
-                <td>Crossovers</td>
-                <td>Active DSP, Linkwitz–Riley 4th order; starting points around 200 Hz (woofer to mids) and 2.7 kHz (mids to tweeter)</td>
-              </tr>
-              <tr>
-                <td>Amplification</td>
-                <td>3 channels per speaker</td>
-              </tr>
-              <tr>
-                <td>Enclosure</td>
-                <td>3D printed in two glued sections; PETG for prototypes</td>
-              </tr>
-              <tr>
-                <td>Mounting</td>
-                <td>Desk-edge clamp with height and toe-in adjustment</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="explore-grid">
+          <div class="chapters" id="chapters">
+            <button type="button" class="chapter" data-chapter="overview" aria-pressed="true">
+              <span class="k">01</span>
+              <h3><span class="zh">梯形箱體</span><span class="en">Trapezoid cabinet</span></h3>
+              <p><span class="zh">前障板只有 7 公分寬，往後逐漸加寬到 12 公分。正面看起來纖細，裡面卻多了三成以上的容積。</span><span class="en">Just 7 cm wide at the front, widening to 12 cm at the back. Slim from the front, with over 30% more internal volume.</span></p>
+            </button>
+            <button type="button" class="chapter" data-chapter="front" aria-pressed="false">
+              <span class="k">02</span>
+              <h3><span class="zh">MTM 中高音</span><span class="en">MTM front array</span></h3>
+              <p><span class="zh">1 吋高音夾在兩顆 2 吋中音中間，上下對稱。所有單體都與前障板齊平，表面完整平整。</span><span class="en">A 1" tweeter between two 2" mids, symmetric top to bottom. Every driver sits flush with the baffle for a clean surface.</span></p>
+            </button>
+            <button type="button" class="chapter" data-chapter="side" aria-pressed="false">
+              <span class="k">03</span>
+              <h3><span class="zh">側發聲低音與被動盆</span><span class="en">Side woofer + passive radiators</span></h3>
+              <p><span class="zh">4 吋低音搭配兩顆 4 吋被動盆，在小箱體裡把低頻往下延伸。低頻沒有方向性，所以可以放在側面。</span><span class="en">A 4" woofer with two 4" passive radiators extends the bass from a small box. Low bass isn't directional, so it can fire sideways.</span></p>
+            </button>
+            <button type="button" class="chapter" data-chapter="xray" aria-pressed="false">
+              <span class="k">04</span>
+              <h3><span class="zh">內部結構</span><span class="en">Inside the cabinet</span></h3>
+              <p><span class="zh">中音有自己的密閉腔（約 0.5 公升），和低音腔（約 5 公升）完全隔開，互不干擾。</span><span class="en">The mids get their own sealed chamber (about 0.5 L), fully separated from the bass chamber (about 5 L).</span></p>
+            </button>
+            <button type="button" class="chapter" data-chapter="desk" aria-pressed="false">
+              <span class="k">05</span>
+              <h3><span class="zh">放在桌上</span><span class="en">On your desk</span></h3>
+              <p><span class="zh">夾在桌子後緣，搭配 32 吋螢幕和螢幕支架。拉動滑桿調整 toe-in 角度。</span><span class="en">Clamped to the back edge of the desk, next to a 32" monitor on an arm. Use the slider to adjust toe-in.</span></p>
+            </button>
+          </div>
+
+          <div class="explore-stage">
+            <div class="viewer" id="main-viewer" role="img" aria-label="Interactive ClampSound 3D model"></div>
+            <div class="stage-controls">
+              <span class="hint"><span class="zh">拖曳旋轉・滾輪縮放</span><span class="en">Drag to rotate · scroll to zoom</span></span>
+              <label id="toe-wrap" hidden>Toe-in <input id="toe" type="range" min="0" max="35" step="1" value="25"> <span id="toe-out">25°</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPECS -->
+    <section class="specs" id="specs">
+      <div class="wrap">
+        <div class="section-head">
+          <p class="eyebrow"><span class="zh">預定規格</span><span class="en">Planned specifications</span></p>
+          <h2><span class="zh">裡面放了什麼</span><span class="en">What's inside</span></h2>
+          <p>
+            <span class="zh">以下是設計目標，還不是量測結果。實際數字會在測試之後更新，也可能隨著實驗調整。</span>
+            <span class="en">These are design targets, not measured results. Numbers will be updated after testing and may change along the way.</span>
+          </p>
         </div>
 
-        <p class="note">
-          Why a low woofer crossover? Because the woofer fires sideways, it has to hand over
-          to the front-facing mids before its output becomes directional. Two 2" mids in an
-          MTM layout give enough headroom to reach down that low at desktop listening levels.
+        <div class="spec-grid">
+          <dl>
+            <div class="spec-row"><dt><span class="zh">尺寸</span><span class="en">Size</span></dt><dd><span class="zh">高 420 × 深 190 mm；前寬 70、後寬 120 mm</span><span class="en">420 tall × 190 deep mm; 70 mm wide at the front, 120 mm at the back</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">高音</span><span class="en">Tweeter</span></dt><dd>1 × Dayton Audio ND25FA-4<span class="zh">，1 吋軟球頂</span><span class="en">, 1" soft dome</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">中音</span><span class="en">Midrange</span></dt><dd>2 × Dayton Audio DMA58-8<span class="zh">，2 吋鋁盆，獨立密閉腔約 0.5 L</span><span class="en">, 2" aluminum cone, sealed chamber of about 0.5 L</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">低音</span><span class="en">Woofer</span></dt><dd>1 × Dayton Audio ND105-4<span class="zh">，4 吋鋁盆，側發聲</span><span class="en">, 4" aluminum cone, side-firing</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">被動盆</span><span class="en">Passive radiators</span></dt><dd>2 × Dayton Audio ND105-PR<span class="zh">，4 吋，低音腔約 5 L</span><span class="en">, 4", bass chamber of about 5 L</span></dd></div>
+          </dl>
+          <dl>
+            <div class="spec-row"><dt><span class="zh">分頻</span><span class="en">Crossover</span></dt><dd><span class="zh">主動式 DSP，LR4；起始分頻點約 200 Hz 與 2.7 kHz</span><span class="en">Active DSP, LR4; starting points around 200 Hz and 2.7 kHz</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">擴大機</span><span class="en">Amplification</span></dt><dd><span class="zh">每支喇叭 3 個聲道</span><span class="en">3 channels per speaker</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">箱體</span><span class="en">Enclosure</span></dt><dd><span class="zh">3D 列印，分兩段黏合；原型用 PETG</span><span class="en">3D printed in two glued sections; PETG for prototypes</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">安裝</span><span class="en">Mounting</span></dt><dd><span class="zh">桌緣夾具，可調高度與 toe-in 角度</span><span class="en">Desk-edge clamp with adjustable height and toe-in</span></dd></div>
+            <div class="spec-row"><dt><span class="zh">配色</span><span class="en">Finish</span></dt><dd><span class="zh">白色箱體，懸邊黑色</span><span class="en">White cabinet with black surrounds</span></dd></div>
+          </dl>
+        </div>
+
+        <p class="spec-note">
+          <span class="zh">為什麼低音的分頻點要這麼低？低音朝側面發聲，必須在聲音開始有方向性之前，就把頻段交給朝前的中音。兩顆 2 吋中音並排（MTM），才有足夠的餘裕往下接到這麼低。</span>
+          <span class="en">Why such a low woofer crossover? The woofer fires sideways, so it has to hand over to the front-facing mids before its output becomes directional. Two 2" mids in an MTM layout give enough headroom to reach that low.</span>
         </p>
       </div>
     </section>
 
-    <section id="roadmap">
+    <!-- PROGRESS -->
+    <section id="progress">
       <div class="wrap">
-        <div class="section-intro">
-          <p class="eyebrow">PROTOTYPE ROADMAP</p>
-          <h2>From rendering to working speaker</h2>
+        <div class="section-head">
+          <p class="eyebrow"><span class="zh">開發進度</span><span class="en">Progress</span></p>
+          <h2><span class="zh">從設計圖到真正能聽的喇叭</span><span class="en">From drawing to a speaker you can hear</span></h2>
         </div>
-
-        <div class="grid">
-          <div class="card active">
-            <span class="status">IN PROGRESS</span>
-            <span class="number">01 — DESIGN</span>
-            <h3>Define the system</h3>
-            <p>Driver lineup, cabinet shape, and crossover plan are chosen. Next: test boxes and simulations to confirm them.</p>
+        <div class="timeline">
+          <div class="stage-card now">
+            <span class="tag"><span class="zh">進行中</span><span class="en">IN PROGRESS</span></span>
+            <h3><span class="zh">01 設計</span><span class="en">01 Design</span></h3>
+            <p><span class="zh">單體、箱體外型和分頻規劃已經決定。接下來用測試箱和模擬來驗證。</span><span class="en">Drivers, cabinet shape, and crossover plan are chosen. Next: confirm them with test boxes and simulation.</span></p>
           </div>
-
-          <div class="card">
-            <span class="number">02 — 3D PRINT</span>
-            <h3>Build the enclosure</h3>
-            <p>Print test boxes first, then a full prototype with a removable front baffle for easy driver swaps.</p>
+          <div class="stage-card">
+            <span class="tag"><span class="zh">下一步</span><span class="en">NEXT</span></span>
+            <h3><span class="zh">02 列印</span><span class="en">02 Print</span></h3>
+            <p><span class="zh">先印測試箱，再印可拆前障板的完整原型，方便更換單體。</span><span class="en">Print test boxes first, then a full prototype with a removable front baffle for easy driver swaps.</span></p>
           </div>
-
-          <div class="card">
-            <span class="number">03 — TEST</span>
-            <h3>Measure and listen</h3>
-            <p>Measure frequency response and distortion, tune the DSP, and check clamp stability and vibration.</p>
+          <div class="stage-card">
+            <span class="tag"><span class="zh">之後</span><span class="en">LATER</span></span>
+            <h3><span class="zh">03 量測</span><span class="en">03 Measure</span></h3>
+            <p><span class="zh">量測頻率響應與失真，調整 DSP，檢查夾具的穩定度和振動。</span><span class="en">Measure response and distortion, tune the DSP, check clamp stability and vibration.</span></p>
           </div>
-
-          <div class="card">
-            <span class="number">04 — REFINE</span>
-            <h3>Improve in public</h3>
-            <p>Share measurements and lessons learned, collect feedback, and revise the design.</p>
+          <div class="stage-card">
+            <span class="tag"><span class="zh">之後</span><span class="en">LATER</span></span>
+            <h3><span class="zh">04 改良</span><span class="en">04 Refine</span></h3>
+            <p><span class="zh">公開量測結果與心得，收集回饋，持續改版。</span><span class="en">Share measurements and lessons, collect feedback, and keep revising.</span></p>
           </div>
         </div>
       </div>
     </section>
 
-    <section id="build-log">
+    <!-- EVOLUTION -->
+    <section id="evolution" style="padding-top: 0;">
       <div class="wrap">
-        <div class="section-intro">
-          <p class="eyebrow">BUILD LOG</p>
-          <h2>Current project status</h2>
+        <div class="section-head">
+          <p class="eyebrow"><span class="zh">設計演進</span><span class="en">How it evolved</span></p>
+          <h2><span class="zh">從第一版概念到 v2</span><span class="en">From the first concept to v2</span></h2>
+          <p>
+            <span class="zh">第一版概念發表在 r/diyaudio 之後，收到很多實用的建議。v2 的大部分改動都來自這些討論。</span>
+            <span class="en">After the first concept was posted on r/diyaudio, the community gave a lot of practical advice. Most v2 changes came from those discussions.</span>
+          </p>
         </div>
-
-        <article class="update">
-          <p class="update-date">UPDATE 02 — DESIGN V2 · NOVEMBER 2026</p>
-          <h3>New cabinet shape, real drivers, and a test plan</h3>
-          <p>
-            Thanks to everyone on r/diyaudio who commented on the first concept. Your feedback
-            on crossover frequency, toe-in, and mounting shaped most of these changes:
-          </p>
-          <ul>
-            <li>The woofer-to-mid crossover moves down to roughly 150–200 Hz, because a side-firing woofer has to hand over early.</li>
-            <li>Two 2" mids in an MTM layout replace the single mid, for more headroom at that low crossover.</li>
-            <li>The cabinet becomes a trapezoid: same 7 cm front, wider back, more bass volume.</li>
-            <li>The clamp design now includes adjustable height and 20–30° of toe-in.</li>
-            <li>The driver lineup is now all Dayton Audio, and the 3D model uses their real dimensions.</li>
-          </ul>
-          <p>
-            Next: build a small sealed test box to measure midrange distortion at different
-            crossover points, simulate the woofer and passive radiators, then print the first
-            test enclosures.
-          </p>
-        </article>
-
-        <article class="update">
-          <p class="update-date">UPDATE 01 — CONCEPT STAGE</p>
-          <h3>First CAD renderings published</h3>
-          <p>
-            The first speaker layout and monitor-scale concepts are complete.
-            Next steps are to select practical driver sizes, determine the required
-            enclosure volume, develop the mounting design, and create a first
-            3D-printed prototype.
-          </p>
-        </article>
+        <div class="evo">
+          <figure>
+            <img src="speaker_with_32inch_monitor.png" alt="First ClampSound concept: red rectangular speakers beside a 32-inch monitor" loading="lazy">
+            <figcaption><strong>v1</strong><span class="zh">長方體箱體，側面三顆大單體。</span><span class="en">Rectangular cabinet with three large side drivers.</span></figcaption>
+          </figure>
+          <figure>
+            <div class="v2"><div class="viewer" id="evo-viewer" role="img" aria-label="ClampSound v2 3D model"></div></div>
+            <figcaption><strong>v2</strong><span class="zh">梯形箱體、前方 MTM、側面低音加兩顆被動盆。</span><span class="en">Trapezoid cabinet, front MTM, side woofer with two passive radiators.</span></figcaption>
+          </figure>
+        </div>
+        <ul class="changes">
+          <li><span class="zh">低音到中音的分頻點降到約 150–200 Hz，因為側發聲低音必須提早交棒。</span><span class="en">Woofer-to-mid crossover drops to about 150–200 Hz, because a side-firing woofer has to hand over early.</span></li>
+          <li><span class="zh">單顆中音改成兩顆 2 吋的 MTM，在低分頻點下有更多餘裕。</span><span class="en">The single mid becomes two 2" mids in MTM, for more headroom at the low crossover.</span></li>
+          <li><span class="zh">箱體改成前窄後寬的梯形，正面一樣纖細，低音腔更大。</span><span class="en">The cabinet becomes a trapezoid: same slim front, more bass volume.</span></li>
+          <li><span class="zh">夾具加入高度調整和 20–30° 的 toe-in。</span><span class="en">The clamp adds height adjustment and 20–30° of toe-in.</span></li>
+        </ul>
       </div>
     </section>
 
-    <section id="renders">
+    <!-- LOG -->
+    <section id="log" style="background: var(--surface-2); border-top: 1px solid var(--line);">
       <div class="wrap">
-        <div class="section-intro">
-          <p class="eyebrow">CONCEPT V1 ARCHIVE</p>
-          <h2>Where the design started</h2>
-
-          <p>
-            The original CAD renderings, kept here for reference. Version 2 changed the
-            cabinet shape, driver layout, and colour based on community feedback.
-          </p>
+        <div class="section-head">
+          <p class="eyebrow"><span class="zh">開發日誌</span><span class="en">Build log</span></p>
+          <h2><span class="zh">每一步都公開記錄</span><span class="en">Every step, in the open</span></h2>
         </div>
 
-        <div class="gallery">
-          <figure>
-            <img src="front_view.png" alt="Front view rendering of the first ClampSound concept" loading="lazy">
-            <figcaption>v1 front view — three side drivers with a compact upper driver section.</figcaption>
-          </figure>
-
-          <figure>
-            <img src="angle_view.png" alt="Angled rendering of the first ClampSound concept" loading="lazy">
-            <figcaption>v1 angled view — rectangular cabinet with rounded edges.</figcaption>
-          </figure>
-
-          <figure>
-            <img src="side_view.png" alt="Side view rendering of the first ClampSound concept" loading="lazy">
-            <figcaption>v1 side view — the narrow front face.</figcaption>
-          </figure>
-
-          <figure>
-            <img src="speaker_with_32inch_monitor.png" alt="Pair of first-concept ClampSound speakers beside a 32-inch monitor" loading="lazy">
-            <figcaption>v1 monitor view — a pair beside a 32-inch display.</figcaption>
-          </figure>
+        <div class="log-list">
+          <article class="log-item">
+            <div class="log-meta"><strong>UPDATE 02</strong><span class="zh">2026 年 11 月</span><span class="en">November 2026</span></div>
+            <div>
+              <h3><span class="zh">設計 v2：新外型、確定單體、測試計畫</span><span class="en">Design v2: new shape, real drivers, a test plan</span></h3>
+              <p><span class="zh">謝謝 r/diyaudio 上每一位留言的朋友。這次的改動大多來自大家對分頻點、toe-in 和安裝方式的建議：</span><span class="en">Thanks to everyone on r/diyaudio who commented. Most of these changes came from your advice on crossover points, toe-in, and mounting:</span></p>
+              <ul>
+                <li><span class="zh">箱體改成梯形，單體改為 MTM 加側面低音與兩顆被動盆。</span><span class="en">Trapezoid cabinet; MTM front with a side woofer and two passive radiators.</span></li>
+                <li><span class="zh">單體全部選用 Dayton Audio，3D 模型依實際尺寸重畫。</span><span class="en">All-Dayton Audio driver lineup; the 3D model now uses their real dimensions.</span></li>
+                <li><span class="zh">分頻改用主動式 DSP，實驗階段先在電腦上調整。</span><span class="en">Active DSP crossover, tuned on a PC during testing.</span></li>
+              </ul>
+              <p><span class="zh">下一步：做一個小密閉盒，量測中音在不同分頻點的失真；模擬低音和被動盆；然後印出第一批測試箱。</span><span class="en">Next: build a small sealed box to measure midrange distortion at different crossover points, simulate the woofer and passive radiators, then print the first test boxes.</span></p>
+            </div>
+          </article>
+          <article class="log-item">
+            <div class="log-meta"><strong>UPDATE 01</strong><span class="zh">概念階段</span><span class="en">Concept stage</span></div>
+            <div>
+              <h3><span class="zh">發表第一版 CAD 概念圖</span><span class="en">First CAD concept published</span></h3>
+              <p><span class="zh">完成第一版的單體配置和搭配 32 吋螢幕的比例圖，並在 r/diyaudio 分享，收集大家的意見。</span><span class="en">Finished the first driver layout and the 32" monitor scale study, and shared it on r/diyaudio for feedback.</span></p>
+            </div>
+          </article>
         </div>
-      </div>
-    </section>
 
-    <section id="follow">
-      <div class="wrap">
-        <p class="eyebrow">FOLLOW THE BUILD</p>
-        <h2>Get ClampSound updates</h2>
-
-        <p>
-          Enter your email to receive occasional updates about new designs,
-          3D-printed prototypes, measurements, design decisions, and opportunities to
-          give feedback. You can unsubscribe at any time.
-        </p>
-
-        <form action="https://buttondown.com/api/emails/embed-subscribe/ClampSound" method="post" class="signup-form">
-          <label for="bd-email">Email address</label>
-
-          <div class="signup-row">
-            <input id="bd-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
-
-            <button type="submit">Get updates</button>
+        <div class="discuss" id="discuss">
+          <div class="discuss-head">
+            <div>
+              <h3><span class="zh">一起討論</span><span class="en">Join the discussion</span></h3>
+              <p style="margin:6px 0 0;"><span class="zh">有建議、問題或想看的測試？直接留言，我會在下一篇日誌回覆。</span><span class="en">Suggestions, questions, or tests you'd like to see? Leave a comment and I'll reply in the next update.</span></p>
+            </div>
           </div>
-
-          <input type="hidden" name="embed" value="1">
-
-          <p class="form-note">
-            By subscribing, you agree to receive occasional ClampSound project updates.
-            No spam. Unsubscribe anytime.
-          </p>
-
-          <p class="powered-by">
-            <a href="https://buttondown.com/refer/ClampSound" target="_blank" rel="noopener">
-              Powered by Buttondown
-            </a>
-          </p>
-        </form>
+          <div id="giscus-slot"></div>
+          <div class="discuss-fallback" id="discuss-fallback">
+            <a class="btn ghost small" href="https://www.reddit.com/r/diyaudio/comments/1t87oua/" target="_blank" rel="noopener"><span class="zh">r/diyaudio 原始討論串</span><span class="en">Original r/diyaudio thread</span></a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="support">
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="wrap about-grid">
+        <div class="avatar" aria-hidden="true">J</div>
+        <div class="narrow">
+          <p class="eyebrow"><span class="zh">關於設計者</span><span class="en">About the designer</span></p>
+          <h2 style="margin-bottom: 20px;">Joey</h2>
+          <p class="lead">
+            <span class="zh">北科機械系畢業，平常的工作是系統聲學工程師。ClampSound 是我下班後的個人專案：想做一對自己每天會用、而且真的解決問題的桌面喇叭。</span>
+            <span class="en">A mechanical engineering graduate from Taipei Tech, working as a system acoustics engineer. ClampSound is my after-hours project: a desktop speaker I'd want to use every day, one that actually solves a problem.</span>
+          </p>
+          <p>
+            <span class="zh">我選擇公開開發，把每個設計決定、量測結果，包括失敗的嘗試都記錄下來。等設計穩定之後，會把檔案和心得分享給 DIY 社群。</span>
+            <span class="en">I'm building it in public, documenting every design decision and measurement, including what doesn't work. Once the design is stable, I plan to share the files and lessons with the DIY community.</span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOLLOW -->
+    <section id="follow" style="padding-top: 0;">
       <div class="wrap">
-        <p class="eyebrow">SUPPORT</p>
-        <h2>Help fund the first prototype</h2>
-
-        <p>
-          Optional one-time tips may help cover filament, drivers, electronics,
-          prototype tools, and testing. Any support is for development only and
-          is not a pre-order for a finished product.
-        </p>
-
-        <a class="button secondary" href="#">
-          Tip page coming soon
-        </a>
+        <div class="follow">
+          <p class="eyebrow"><span class="zh">追蹤開發</span><span class="en">Follow the build</span></p>
+          <h2><span class="zh">每完成一步，第一個通知你。</span><span class="en">Be the first to see each step.</span></h2>
+          <p>
+            <span class="zh">留下 Email，就能收到新的設計圖、原型照片、量測結果，以及參與設計決定的機會。不定期寄送，不會有廣告。</span>
+            <span class="en">Leave your email to get new designs, prototype photos, measurements, and chances to weigh in on design decisions. Occasional emails, no spam.</span>
+          </p>
+          <form class="signup" action="https://buttondown.com/api/emails/embed-subscribe/ClampSound" method="post">
+            <label for="bd-email"><span class="zh">Email 地址</span><span class="en">Email address</span></label>
+            <div class="signup-row">
+              <input id="bd-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+              <button type="submit"><span class="zh">訂閱更新</span><span class="en">Get updates</span></button>
+            </div>
+            <input type="hidden" name="embed" value="1">
+            <small>
+              <span class="zh">訂閱即表示同意接收 ClampSound 的開發更新，可隨時取消。</span>
+              <span class="en">By subscribing you agree to receive ClampSound updates. Unsubscribe anytime.</span>
+              · <a href="https://buttondown.com/refer/ClampSound" target="_blank" rel="noopener">Powered by Buttondown</a>
+            </small>
+          </form>
+          <div class="follow-links">
+            <a href="#discuss"><span class="zh">參與討論</span><span class="en">Join the discussion</span></a>
+            <a href="https://www.reddit.com/r/diyaudio/comments/1t87oua/" target="_blank" rel="noopener">r/diyaudio</a>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
   <footer>
-    <div class="wrap">
-      ClampSound is an independent build-in-public speaker concept. © 2026
+    <div class="wrap foot-row">
+      <span><span class="zh">ClampSound 是一個獨立、公開開發中的喇叭專案。目前不販售產品。</span><span class="en">ClampSound is an independent speaker project built in public. Nothing is for sale yet.</span> © 2026</span>
+      <span>
+        <a href="#top"><span class="zh">回到頂端</span><span class="en">Back to top</span></a>
+      </span>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var saved = null;
+      try { saved = localStorage.getItem('cs-lang'); } catch (e) {}
+      var lang = saved || ((navigator.language || '').toLowerCase().indexOf('zh') === 0 ? 'zh' : 'en');
+      function setLang(l) {
+        root.setAttribute('data-lang', l);
+        root.setAttribute('lang', l === 'zh' ? 'zh-Hant' : 'en');
+        document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+          b.setAttribute('aria-pressed', b.getAttribute('data-set-lang') === l ? 'true' : 'false');
+        });
+        try { localStorage.setItem('cs-lang', l); } catch (e) {}
+        if (window.csGiscusLang) window.csGiscusLang(l);
+      }
+      document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+        b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang')); });
+      });
+      setLang(lang);
+    })();
+  </script>
+
+  <script>
+    /* Comments via giscus (GitHub Discussions).
+       To enable: turn on Discussions for this repo, install https://github.com/apps/giscus,
+       then fill in CATEGORY_ID below (get it from https://giscus.app). */
+    (function () {
+      var GISCUS = {
+        repo: 'joey6009/joey6009.github.io',
+        repoId: 'R_kgDOTqKL1Q',
+        category: 'General',
+        categoryId: ''
+      };
+      var slot = document.getElementById('giscus-slot');
+      if (!slot || !GISCUS.categoryId) return;
+      var lang = document.documentElement.getAttribute('data-lang') === 'zh' ? 'zh-TW' : 'en';
+      var s = document.createElement('script');
+      s.src = 'https://giscus.app/client.js';
+      s.setAttribute('data-repo', GISCUS.repo);
+      s.setAttribute('data-repo-id', GISCUS.repoId);
+      s.setAttribute('data-category', GISCUS.category);
+      s.setAttribute('data-category-id', GISCUS.categoryId);
+      s.setAttribute('data-mapping', 'specific');
+      s.setAttribute('data-term', 'ClampSound build log');
+      s.setAttribute('data-reactions-enabled', '1');
+      s.setAttribute('data-emit-metadata', '0');
+      s.setAttribute('data-input-position', 'top');
+      s.setAttribute('data-theme', 'light');
+      s.setAttribute('data-lang', lang);
+      s.setAttribute('data-loading', 'lazy');
+      s.crossOrigin = 'anonymous';
+      s.async = true;
+      slot.appendChild(s);
+      var fb = document.getElementById('discuss-fallback');
+      if (fb) fb.style.marginTop = '20px';
+      window.csGiscusLang = function (l) {
+        var f = document.querySelector('iframe.giscus-frame');
+        if (f) f.contentWindow.postMessage({ giscus: { setConfig: { lang: l === 'zh' ? 'zh-TW' : 'en' } } }, 'https://giscus.app');
+      };
+    })();
+  </script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
@@ -907,6 +739,14 @@
     var ZF = 27, DESK_R = 6, MON_Y = 27, LIFT = 5;
     var V = function (x, y, z) { return new THREE.Vector3(x, y, z); };
 
+    var VIEWS = {
+      overview: { mode: 'single', xray: false, pos: [55, 14, 42], target: [0, 0, 0] },
+      front:    { mode: 'single', xray: false, pos: [8, 6, 95], target: [0, 4, 0] },
+      side:     { mode: 'single', xray: false, pos: [85, 6, 18], target: [0, 0, 0] },
+      xray:     { mode: 'single', xray: true,  pos: [60, 30, 55], target: [0, 2, 0] },
+      desk:     { mode: 'pair',   xray: false, pos: [-75, 85, 175], target: [0, 24, 18] }
+    };
+
     function createViewer(el, opts) {
       var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -914,29 +754,33 @@
       el.appendChild(renderer.domElement);
 
       var scene = new THREE.Scene();
-      var camera = new THREE.PerspectiveCamera(35, 1, 1, 3000);
+      var camera = new THREE.PerspectiveCamera(opts.fov || 32, 1, 1, 3000);
       var controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.autoRotate = !!opts.autoRotate;
-      controls.autoRotateSpeed = 1.2;
+      controls.autoRotateSpeed = 1.1;
+      controls.enablePan = false;
       if (opts.noZoom) controls.enableZoom = false;
 
-      scene.add(new THREE.HemisphereLight(0xffffff, 0x707870, 0.85));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.3));
-      var dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(80, 120, 160); scene.add(dl);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xb8b2a6, 0.75));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
+      var dl = new THREE.DirectionalLight(0xffffff, 0.75); dl.position.set(80, 120, 160); scene.add(dl);
       var dl2 = new THREE.DirectionalLight(0xffffff, 0.35); dl2.position.set(-120, 40, 60); scene.add(dl2);
+      var dl3 = new THREE.DirectionalLight(0xffffff, 0.3); dl3.position.set(120, 20, -40); scene.add(dl3);
 
-      function M(c, r, m) { return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m || 0, side: THREE.DoubleSide }); }
-      var WHITE = 0xefede8;
-      var mW = M(WHITE, 0.4), mWC = M(0xe2dfd8, 0.48), mBlk = M(0x121212, 0.75), mDark = M(0x1c1c1c, 0.55),
-          mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5), mGray = M(0x4a4e54, 0.45, 0.2),
-          mScr = M(0x080808, 0.25), mDesk = M(0x8a6d4c, 0.75), mWall = M(0x2b302b, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5),
-          mFrame = M(0x6b6f75, 0.5, 0.3), mMag = M(0x33363a, 0.4, 0.6);
-      var mChamber = new THREE.MeshStandardMaterial({ color: 0xb7ef61, transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide });
-      var mCab = new THREE.MeshStandardMaterial({ color: WHITE, roughness: 0.4, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
+      function M(c, r, m, e) {
+        return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m || 0, emissive: e || 0x000000, side: THREE.DoubleSide });
+      }
+      var WHITE = 0xf1efea;
+      var mW = M(WHITE, 0.42, 0, 0x1a1a1a), mWC = M(0xe8e5de, 0.5, 0, 0x202020), mBlk = M(0x141414, 0.75),
+          mDark = M(0x1c1c1c, 0.55), mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5),
+          mGray = M(0x3d4045, 0.45, 0.2), mScr = M(0x0a0a0a, 0.25), mDesk = M(0xc9a97c, 0.75),
+          mWall = M(0xe9e5dd, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
+      var mChamber = new THREE.MeshStandardMaterial({ color: 0xb4532a, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide });
+      var mCab = new THREE.MeshStandardMaterial({ color: WHITE, roughness: 0.42, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
       var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
 
-      var state = { mode: opts.mode || 'single', toe: 25, xray: false };
+      var state = { mode: 'single', toe: 25, xray: false };
       var root = null;
 
       function rr(s, x, y, w, h, r) {
@@ -959,6 +803,7 @@
         o.rotation.x = Math.PI / 2; o.scale.y = sz || 1; o.position.z = z; return o;
       }
       function disc(r, m, z) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 72), m); o.position.z = z; return o; }
+      function ring(r1, r2, m, z) { var o = new THREE.Mesh(new THREE.RingGeometry(r1, r2, 72), m); o.position.z = z; return o; }
       function tube(r, h, m, z0) { var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 72, 1, true), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
       function cyl(r1, r2, z0, z1, m) { var h = z0 - z1; var o = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, 40), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
       function mask(r) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 72), mMask); o.position.z = 0.01; o.renderOrder = 1; return o; }
@@ -985,11 +830,15 @@
         g.add(cyl(1.7, 1.7, -WT - 0.4, -3.8, mMag));
         return g;
       }
+      /* Tweeter: faceplate sits in a recess, its face flush with the baffle (z = 0). */
       function tw() {
         var g = new THREE.Group();
-        g.add(cyl(3.3, 3.3, 0.35, 0, mDark));
-        var b = new THREE.Mesh(new THREE.TorusGeometry(3.15, 0.18, 12, 64), mDark); b.position.z = 0.2; g.add(b);
-        g.add(disc(1.7, mBlk, 0.36)); g.add(dome(1.25, mDome, 0.36, 0.75)); g.add(cyl(2.2, 2.2, -WT, -3.6, mMag));
+        g.add(mask(3.3));
+        g.add(tube(3.3, 0.35, mDark, 0));
+        g.add(ring(1.7, 3.3, mDark, -0.01));
+        g.add(ring(1.45, 1.7, mBlk, -0.02));
+        g.add(dome(1.45, mDome, -0.55, 0.55));
+        g.add(cyl(2.2, 2.2, -WT, -3.6, mMag));
         return g;
       }
       function aAt(z, a0, a1) { return a0 + (a1 - a0) * (D / 2 - z) / D; }
@@ -1070,46 +919,69 @@
         }
         scene.add(root);
       }
-      function setView() {
-        if (state.mode === 'single') { camera.position.set(55, 14, 42); controls.target.set(0, 0, 0); }
-        else if (state.mode === 'front') { camera.position.set(0, 4, 110); controls.target.set(0, 0, 0); }
-        else { camera.position.set(-75, 85, 175); controls.target.set(0, 24, 18); }
-        controls.update();
+
+      var fly = null;
+      function goTo(name, animate) {
+        var v = VIEWS[name]; if (!v) return;
+        var rebuild = v.mode !== state.mode || v.xray !== state.xray;
+        state.mode = v.mode; state.xray = v.xray;
+        if (rebuild || !root) build();
+        var toPos = V(v.pos[0], v.pos[1], v.pos[2]), toTar = V(v.target[0], v.target[1], v.target[2]);
+        if (!animate || rebuild) {
+          camera.position.copy(toPos); controls.target.copy(toTar); controls.update(); fly = null; return;
+        }
+        fly = { t: 0, fromPos: camera.position.clone(), fromTar: controls.target.clone(), toPos: toPos, toTar: toTar };
       }
       function resize() {
         var w = el.clientWidth, h = el.clientHeight;
+        if (!w || !h) return;
         renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
       }
       window.addEventListener('resize', resize);
-      build(); setView(); resize();
-      (function loop() { requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+      goTo(opts.view || 'overview', false); resize();
+
+      var visible = true;
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(el);
+      }
+      (function loop() {
+        requestAnimationFrame(loop);
+        if (!visible) return;
+        if (fly) {
+          fly.t = Math.min(1, fly.t + 0.04);
+          var e = 1 - Math.pow(1 - fly.t, 3);
+          camera.position.lerpVectors(fly.fromPos, fly.toPos, e);
+          controls.target.lerpVectors(fly.fromTar, fly.toTar, e);
+          if (fly.t >= 1) fly = null;
+        }
+        controls.update(); renderer.render(scene, camera);
+      })();
 
       return {
-        setMode: function (m) { state.mode = m; build(); setView(); },
-        setToe: function (t) { state.toe = t; if (state.mode === 'pair') build(); },
-        toggleXray: function () { state.xray = !state.xray; build(); return state.xray; }
+        goTo: goTo,
+        setToe: function (t) { state.toe = t; if (state.mode === 'pair') build(); }
       };
     }
 
-    var heroEl = document.getElementById('hero-viewer');
-    if (heroEl) createViewer(heroEl, { mode: 'single', autoRotate: true, noZoom: true });
+    var hero = document.getElementById('hero-viewer');
+    if (hero) createViewer(hero, { view: 'overview', autoRotate: true, noZoom: true, fov: 30 });
+
+    var evo = document.getElementById('evo-viewer');
+    if (evo) createViewer(evo, { view: 'overview', autoRotate: true, noZoom: true, fov: 34 });
 
     var mainEl = document.getElementById('main-viewer');
     if (mainEl) {
-      var viewer = createViewer(mainEl, { mode: 'single' });
-      var buttons = document.querySelectorAll('#viewer-controls button[data-mode]');
-      buttons.forEach(function (b) {
+      var viewer = createViewer(mainEl, { view: 'overview' });
+      var toeWrap = document.getElementById('toe-wrap');
+      var chapters = document.querySelectorAll('[data-chapter]');
+      chapters.forEach(function (b) {
         b.addEventListener('click', function () {
-          buttons.forEach(function (x) { x.classList.remove('on'); });
-          b.classList.add('on');
-          viewer.setMode(b.getAttribute('data-mode'));
+          chapters.forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+          b.setAttribute('aria-pressed', 'true');
+          var name = b.getAttribute('data-chapter');
+          viewer.goTo(name, true);
+          toeWrap.hidden = name !== 'desk';
         });
-      });
-      var xb = document.getElementById('xray-btn');
-      xb.addEventListener('click', function () {
-        var on = viewer.toggleXray();
-        xb.textContent = 'X-ray: ' + (on ? 'on' : 'off');
-        xb.classList.toggle('on', on);
       });
       var toe = document.getElementById('toe'), toeOut = document.getElementById('toe-out');
       toe.addEventListener('input', function () {
