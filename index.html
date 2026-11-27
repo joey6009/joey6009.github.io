@@ -123,7 +123,9 @@
     .hero-tag {
       position: absolute; left: 20px; bottom: 18px;
       font-size: 0.8rem; color: var(--soft);
+      background: rgba(255,255,255,0.8); padding: 5px 12px; border-radius: 999px;
     }
+    #hero-color { color: var(--ink); font-weight: 500; }
     .status-pill {
       display: inline-flex; align-items: center; gap: 8px;
       padding: 6px 12px; border-radius: 999px; background: var(--surface);
@@ -227,13 +229,8 @@
     .discuss-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 20px; }
     .discuss-fallback { display: flex; flex-wrap: wrap; gap: 12px; }
 
-    /* About */
-    .about-grid { display: grid; grid-template-columns: 220px 1fr; gap: 56px; align-items: start; }
-    .avatar {
-      width: 180px; height: 180px; border-radius: 50%; background: var(--surface);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 3rem; font-weight: 700; color: var(--soft);
-    }
+    .contact { margin-top: 28px; }
+    .contact a { color: var(--ink); font-weight: 500; text-underline-offset: 4px; }
 
     /* Follow */
     .follow { background: var(--ink); color: #fff; border-radius: 28px; padding: 80px 64px; }
@@ -284,8 +281,7 @@
       .three { gap: 32px; }
       .hero-stage { height: 400px; }
       .spec-row { grid-template-columns: 110px 1fr; }
-      .log-item, .about-grid { grid-template-columns: 1fr; gap: 16px; }
-      .avatar { width: 120px; height: 120px; font-size: 2rem; }
+      .log-item { grid-template-columns: 1fr; gap: 16px; }
       .follow { padding: 56px 28px; border-radius: 20px; }
       .signup-row { flex-direction: column; }
       .discuss { padding: 24px; }
@@ -336,7 +332,7 @@
         </div>
         <div class="hero-stage">
           <div class="viewer" id="hero-viewer" role="img" aria-label="ClampSound 3D model"></div>
-          <span class="hero-tag"><span class="zh">設計 v2・可拖曳旋轉</span><span class="en">Design v2 · drag to rotate</span></span>
+          <span class="hero-tag"><span class="zh">配色概念</span><span class="en">Colour concept</span>：<span id="hero-color"></span><span class="zh">・可拖曳旋轉</span><span class="en"> · drag to rotate</span></span>
         </div>
       </div>
     </section>
@@ -620,18 +616,21 @@
 
     <!-- ABOUT -->
     <section id="about">
-      <div class="wrap about-grid">
-        <div class="avatar" aria-hidden="true">J</div>
+      <div class="wrap">
         <div class="narrow">
           <p class="eyebrow"><span class="zh">關於設計者</span><span class="en">About the designer</span></p>
-          <h2 style="margin-bottom: 20px;">Joey</h2>
+          <h2 style="margin-bottom: 20px;"><span class="zh">來自台灣的聲學工程師</span><span class="en">An acoustic engineer from Taiwan</span></h2>
           <p class="lead">
-            <span class="zh">北科機械系畢業，平常的工作是系統聲學工程師。ClampSound 是我下班後的個人專案：想做一對自己每天會用、而且真的解決問題的桌面喇叭。</span>
-            <span class="en">A mechanical engineering graduate from Taipei Tech, working as a system acoustics engineer. ClampSound is my after-hours project: a desktop speaker I'd want to use every day, one that actually solves a problem.</span>
+            <span class="zh">ClampSound 是我下班後的個人專案：想做一對自己每天會用、而且真的解決問題的桌面喇叭。</span>
+            <span class="en">ClampSound is my after-hours project: a desktop speaker I'd want to use every day, one that actually solves a problem.</span>
           </p>
           <p>
             <span class="zh">我選擇公開開發，把每個設計決定、量測結果，包括失敗的嘗試都記錄下來。等設計穩定之後，會把檔案和心得分享給 DIY 社群。</span>
             <span class="en">I'm building it in public, documenting every design decision and measurement, including what doesn't work. Once the design is stable, I plan to share the files and lessons with the DIY community.</span>
+          </p>
+          <p class="contact" id="contact" hidden>
+            <span class="zh">合作、建議或任何問題，歡迎來信：</span><span class="en">For collaboration, ideas, or questions, email me:</span>
+            <a id="contact-link" href="#"></a>
           </p>
         </div>
       </div>
@@ -697,6 +696,17 @@
         b.addEventListener('click', function () { setLang(b.getAttribute('data-set-lang')); });
       });
       setLang(lang);
+    })();
+  </script>
+
+  <script>
+    (function () {
+      var user = '', domain = 'gmail.com';
+      if (!user) return;
+      var a = document.getElementById('contact-link');
+      a.href = 'mailto:' + user + '@' + domain + '?subject=ClampSound';
+      a.textContent = user + '@' + domain;
+      document.getElementById('contact').hidden = false;
     })();
   </script>
 
@@ -786,10 +796,19 @@
       var mW = M(WHITE, 0.42, 0, 0x2a2a2a), mWC = M(0xe8e5de, 0.5, 0, 0x3a3a3a), mBlk = M(0x141414, 0.75),
           mDark = M(0x1c1c1c, 0.55), mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5),
           mGray = M(0x3d4045, 0.45, 0.2), mScr = M(0x0a0a0a, 0.25), mDesk = M(0x9c7a52, 0.8),
-          mWall = M(0xdcd7cd, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
+          mWall = M(0xd9c6a5, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
       var mChamber = new THREE.MeshStandardMaterial({ color: 0xb4532a, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide });
       var mCab = new THREE.MeshStandardMaterial({ color: WHITE, roughness: 0.42, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
       var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
+
+      var palette = (opts.colors || []).map(function (c) { return { color: new THREE.Color(c.hex), zh: c.zh, en: c.en }; });
+      var cIdx = 0, cT = 0, lastT = performance.now(), tmpC = new THREE.Color();
+      var HOLD = 3.5, FADE = 1.2;
+      function applyColor(c) {
+        mCab.color.copy(c); mW.color.copy(c); mWC.color.copy(c).multiplyScalar(0.94);
+        var e = c.clone().multiplyScalar(0.12); mW.emissive.copy(e); mWC.emissive.copy(e);
+      }
+      if (palette.length) { applyColor(palette[0].color); if (opts.onColor) opts.onColor(palette[0]); }
 
       var state = { mode: 'single', toe: 25, xray: false };
       var root = null;
@@ -959,7 +978,16 @@
       }
       (function loop() {
         requestAnimationFrame(loop);
+        var now = performance.now(), dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
         if (!visible) return;
+        if (palette.length > 1) {
+          cT += dt;
+          if (cT > HOLD) {
+            var f = Math.min(1, (cT - HOLD) / FADE), nxt = (cIdx + 1) % palette.length;
+            tmpC.copy(palette[cIdx].color).lerp(palette[nxt].color, f); applyColor(tmpC);
+            if (f >= 1) { cIdx = nxt; cT = 0; if (opts.onColor) opts.onColor(palette[cIdx]); }
+          }
+        }
         if (fly) {
           fly.t = Math.min(1, fly.t + 0.04);
           var e = 1 - Math.pow(1 - fly.t, 3);
@@ -986,7 +1014,23 @@
     }
 
     var hero = document.getElementById('hero-viewer');
-    if (hero) createViewer(hero, { view: 'overview', autoRotate: true, noZoom: true, fov: 30, zoom: 1.75 });
+    if (hero) {
+      var heroColor = document.getElementById('hero-color');
+      createViewer(hero, {
+        view: 'overview', autoRotate: true, noZoom: true, fov: 30, zoom: 1.75,
+        colors: [
+          { hex: 0xf1efea, zh: '霧白', en: 'Chalk White' },
+          { hex: 0x2e2f31, zh: '石墨黑', en: 'Graphite' },
+          { hex: 0x8f9c82, zh: '鼠尾草綠', en: 'Sage' },
+          { hex: 0x6d87a0, zh: '霧藍', en: 'Dusk Blue' },
+          { hex: 0xc0643a, zh: '陶土橘', en: 'Terracotta' },
+          { hex: 0xcdb894, zh: '砂岩米', en: 'Sandstone' }
+        ],
+        onColor: function (c) {
+          if (heroColor) heroColor.innerHTML = '<span class="zh">' + c.zh + '</span><span class="en">' + c.en + '</span>';
+        }
+      });
+    }
 
     var evo = document.getElementById('evo-viewer');
     if (evo) createViewer(evo, { view: 'overview', autoRotate: true, noZoom: true, fov: 34, zoom: 1.45 });
