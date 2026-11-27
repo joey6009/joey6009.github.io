@@ -110,12 +110,12 @@
 
     /* Hero */
     .hero { padding: 48px 0 40px; }
-    .hero-grid { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; }
-    .hero h1 { margin-bottom: 26px; }
-    .hero .lead { max-width: 500px; margin-bottom: 34px; }
+    .hero-top { display: grid; grid-template-columns: 1.1fr 0.9fr; align-items: end; gap: 48px; margin-bottom: 40px; }
+    .hero h1 { margin-bottom: 0; }
+    .hero .lead { max-width: 520px; margin-bottom: 26px; }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
     .hero-stage {
-      position: relative; height: 620px; border-radius: 24px;
+      position: relative; height: clamp(380px, 48vw, 620px); border-radius: 24px;
       background: radial-gradient(ellipse at 50% 60%, #ffffff 0%, var(--surface) 70%);
       overflow: hidden;
     }
@@ -266,8 +266,8 @@
     @media (max-width: 1020px) {
       nav.main { display: none; }
       .lang-toggle { margin-left: auto; }
-      .hero-grid, .explore-grid { grid-template-columns: 1fr; }
-      .hero-stage { height: 480px; }
+      .hero-top, .explore-grid { grid-template-columns: 1fr; }
+      .hero-top { gap: 24px; }
       .explore-stage { min-height: 520px; }
       .chapters { display: grid; grid-template-columns: 1fr 1fr; }
       .timeline { grid-template-columns: 1fr 1fr; }
@@ -279,7 +279,7 @@
       .header-row .btn { display: none; }
       .compare, .three, .spec-grid, .evo, .changes, .timeline, .chapters { grid-template-columns: 1fr; }
       .three { gap: 32px; }
-      .hero-stage { height: 400px; }
+      .hero-stage { height: 360px; }
       .spec-row { grid-template-columns: 110px 1fr; }
       .log-item { grid-template-columns: 1fr; gap: 16px; }
       .follow { padding: 56px 28px; border-radius: 20px; }
@@ -314,24 +314,28 @@
   <main id="main">
     <!-- HERO -->
     <section class="hero" id="top">
-      <div class="wrap hero-grid">
-        <div>
-          <span class="status-pill"><span class="zh">設計階段・公開開發中</span><span class="en">Design stage · Built in public</span></span>
-          <h1>
-            <span class="zh">更多聲音，<br>更少桌面。</span>
-            <span class="en">More sound.<br>Less desk.</span>
-          </h1>
-          <p class="lead">
-            <span class="zh">ClampSound 是一對夾在桌緣、立在螢幕兩側的細長喇叭。桌面完全空出來，高音剛好在耳朵的高度，左右聲道也自然拉開。</span>
-            <span class="en">ClampSound is a pair of slim speakers that clamp to the back of your desk and stand beside your monitor. Your desk stays clear, the tweeters sit at ear height, and the stereo image opens up naturally.</span>
-          </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#explore"><span class="zh">探索設計</span><span class="en">Explore the design</span></a>
-            <a class="btn ghost" href="#follow"><span class="zh">追蹤開發進度</span><span class="en">Follow the build</span></a>
+      <div class="wrap">
+        <div class="hero-top">
+          <div>
+            <span class="status-pill"><span class="zh">設計階段・公開開發中</span><span class="en">Design stage · Built in public</span></span>
+            <h1>
+              <span class="zh">更多聲音，<br>更少桌面。</span>
+              <span class="en">More sound.<br>Less desk.</span>
+            </h1>
+          </div>
+          <div>
+            <p class="lead">
+              <span class="zh">ClampSound 是一對夾在桌緣、立在螢幕兩側的細長喇叭。桌面完全空出來，喇叭和螢幕一樣高，左右聲道也自然拉開。</span>
+              <span class="en">ClampSound is a pair of slim speakers that clamp to the back of your desk and stand beside your monitor. Your desk stays clear, the speakers line up with your screen, and the stereo image opens up naturally.</span>
+            </p>
+            <div class="hero-actions">
+              <a class="btn primary" href="#explore"><span class="zh">探索設計</span><span class="en">Explore the design</span></a>
+              <a class="btn ghost" href="#follow"><span class="zh">追蹤開發進度</span><span class="en">Follow the build</span></a>
+            </div>
           </div>
         </div>
         <div class="hero-stage">
-          <div class="viewer" id="hero-viewer" role="img" aria-label="ClampSound 3D model"></div>
+          <div class="viewer" id="hero-viewer" role="img" aria-label="A pair of ClampSound speakers clamped to a desk beside a 32-inch monitor"></div>
           <span class="hero-tag"><span class="zh">配色概念</span><span class="en">Colour concept</span>：<span id="hero-color"></span><span class="zh">・可拖曳旋轉</span><span class="en"> · drag to rotate</span></span>
         </div>
       </div>
@@ -701,7 +705,7 @@
 
   <script>
     (function () {
-      var user = '', domain = 'gmail.com';
+      var user = 'joeyyang43', domain = 'gmail.com';
       if (!user) return;
       var a = document.getElementById('contact-link');
       a.href = 'mailto:' + user + '@' + domain + '?subject=ClampSound';
@@ -757,7 +761,7 @@
     if (!window.THREE) return;
 
     var H = 42, D = 19, W0 = 7, W1 = 12, R = 2.5, WT = 0.5, TY = 9.5, GAP = 6.1, SIDE_Z = -1.5, MC_D = 5;
-    var ZF = 27, DESK_R = 6, MON_Y = 27, LIFT = 5;
+    var ZF = 27, DESK_R = 6, MON_Y = 27, LIFT = 0;
     var V = function (x, y, z) { return new THREE.Vector3(x, y, z); };
 
     var VIEWS = {
@@ -765,7 +769,8 @@
       front:    { mode: 'single', xray: false, pos: [8, 6, 95], target: [0, 4, 0] },
       side:     { mode: 'single', xray: false, pos: [85, 6, 18], target: [0, 0, 0] },
       xray:     { mode: 'single', xray: true,  pos: [60, 30, 55], target: [0, 2, 0] },
-      desk:     { mode: 'pair',   xray: false, pos: [-115, 110, 255], target: [0, 26, 18] }
+      desk:     { mode: 'pair',   xray: false, pos: [-115, 110, 255], target: [0, 26, 18] },
+      hero:     { mode: 'pair',   xray: false, pos: [-62, 62, 168], target: [0, 22, 18] }
     };
 
     function createViewer(el, opts) {
@@ -780,6 +785,14 @@
       controls.enableDamping = true;
       controls.autoRotate = !!opts.autoRotate;
       controls.autoRotateSpeed = 1.1;
+      if (opts.sway) {
+        controls.autoRotate = true;
+        controls.autoRotateSpeed = 0.5;
+        controls.minAzimuthAngle = -0.75;
+        controls.maxAzimuthAngle = 0.75;
+        controls.minPolarAngle = 0.6;
+        controls.maxPolarAngle = 1.45;
+      }
       controls.enablePan = false;
       controls.enableZoom = false;
 
@@ -988,6 +1001,11 @@
             if (f >= 1) { cIdx = nxt; cT = 0; if (opts.onColor) opts.onColor(palette[cIdx]); }
           }
         }
+        if (opts.sway) {
+          var az = controls.getAzimuthalAngle();
+          if (az > 0.72) controls.autoRotateSpeed = -Math.abs(controls.autoRotateSpeed);
+          if (az < -0.72) controls.autoRotateSpeed = Math.abs(controls.autoRotateSpeed);
+        }
         if (fly) {
           fly.t = Math.min(1, fly.t + 0.04);
           var e = 1 - Math.pow(1 - fly.t, 3);
@@ -1017,7 +1035,7 @@
     if (hero) {
       var heroColor = document.getElementById('hero-color');
       createViewer(hero, {
-        view: 'overview', autoRotate: true, noZoom: true, fov: 30, zoom: 1.75,
+        view: 'hero', sway: true, fov: 30,
         colors: [
           { hex: 0xf1efea, zh: '霧白', en: 'Chalk White' },
           { hex: 0x2e2f31, zh: '石墨黑', en: 'Graphite' },
