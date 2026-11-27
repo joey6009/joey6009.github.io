@@ -772,7 +772,7 @@
         return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m || 0, emissive: e || 0x000000, side: THREE.DoubleSide });
       }
       var WHITE = 0xf1efea;
-      var mW = M(WHITE, 0.42, 0, 0x1a1a1a), mWC = M(0xe8e5de, 0.5, 0, 0x202020), mBlk = M(0x141414, 0.75),
+      var mW = M(WHITE, 0.42, 0, 0x2a2a2a), mWC = M(0xe8e5de, 0.5, 0, 0x3a3a3a), mBlk = M(0x141414, 0.75),
           mDark = M(0x1c1c1c, 0.55), mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5),
           mGray = M(0x3d4045, 0.45, 0.2), mScr = M(0x0a0a0a, 0.25), mDesk = M(0xc9a97c, 0.75),
           mWall = M(0xe9e5dd, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
@@ -926,7 +926,9 @@
         var rebuild = v.mode !== state.mode || v.xray !== state.xray;
         state.mode = v.mode; state.xray = v.xray;
         if (rebuild || !root) build();
-        var toPos = V(v.pos[0], v.pos[1], v.pos[2]), toTar = V(v.target[0], v.target[1], v.target[2]);
+        var toTar = V(v.target[0], v.target[1], v.target[2]);
+        var z = (v.mode === 'single' && opts.zoom) ? opts.zoom : 1;
+        var toPos = V(v.pos[0], v.pos[1], v.pos[2]).sub(toTar).multiplyScalar(z).add(toTar);
         if (!animate || rebuild) {
           camera.position.copy(toPos); controls.target.copy(toTar); controls.update(); fly = null; return;
         }
@@ -964,14 +966,14 @@
     }
 
     var hero = document.getElementById('hero-viewer');
-    if (hero) createViewer(hero, { view: 'overview', autoRotate: true, noZoom: true, fov: 30 });
+    if (hero) createViewer(hero, { view: 'overview', autoRotate: true, noZoom: true, fov: 30, zoom: 1.75 });
 
     var evo = document.getElementById('evo-viewer');
-    if (evo) createViewer(evo, { view: 'overview', autoRotate: true, noZoom: true, fov: 34 });
+    if (evo) createViewer(evo, { view: 'overview', autoRotate: true, noZoom: true, fov: 34, zoom: 1.45 });
 
     var mainEl = document.getElementById('main-viewer');
     if (mainEl) {
-      var viewer = createViewer(mainEl, { view: 'overview' });
+      var viewer = createViewer(mainEl, { view: 'overview', zoom: 1.35 });
       var toeWrap = document.getElementById('toe-wrap');
       var chapters = document.querySelectorAll('[data-chapter]');
       chapters.forEach(function (b) {
