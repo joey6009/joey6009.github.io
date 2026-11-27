@@ -874,7 +874,7 @@
       var scene = new THREE.Scene();
       (function () {
         var env = new THREE.Scene();
-        var room = new THREE.Mesh(new THREE.BoxGeometry(100, 60, 100), new THREE.MeshStandardMaterial({ color: C(0x8a8276), side: THREE.BackSide, roughness: 1 }));
+        var room = new THREE.Mesh(new THREE.BoxGeometry(100, 60, 100), new THREE.MeshStandardMaterial({ color: C(0xd6d0c6), side: THREE.BackSide, roughness: 1 }));
         room.position.y = 20; env.add(room);
         function panel(w, h, k, x, y, z, rx, ry) {
           var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k) }));
@@ -883,6 +883,8 @@
         panel(40, 25, 6, -20, 45, 10, Math.PI / 2, 0);
         panel(30, 40, 3, 49, 20, 0, 0, -Math.PI / 2);
         panel(50, 20, 1.6, 0, 20, 49, 0, Math.PI);
+        panel(40, 40, 1.4, -49, 20, 0, 0, Math.PI / 2);
+        panel(60, 30, 1.2, 0, 20, -49, 0, 0);
         var pm = new THREE.PMREMGenerator(renderer);
         scene.environment = pm.fromScene(env, 0.04).texture;
         pm.dispose();
@@ -915,9 +917,9 @@
 
       function P(o) { o.side = THREE.DoubleSide; return new THREE.MeshPhysicalMaterial(o); }
       var BASE = 0xf1efea;
-      var mCab = new THREE.MeshPhysicalMaterial({ color: C(BASE), roughness: 0.42, clearcoat: 0.25, clearcoatRoughness: 0.35, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
-      var mPaint = P({ color: C(BASE), roughness: 0.4, clearcoat: 0.2 });
-      var mPaint2 = P({ color: C(0xe7e4dd), roughness: 0.48 });
+      var mCab = new THREE.MeshPhysicalMaterial({ color: C(BASE), roughness: 0.6, envMapIntensity: 0.6, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
+      var mPaint = P({ color: C(BASE), roughness: 0.6, envMapIntensity: 0.6 });
+      var mPaint2 = P({ color: C(0xe7e4dd), roughness: 0.6, envMapIntensity: 0.6 });
       var mRubber = P({ color: C(0x121212), roughness: 0.85 });
       var mAl = P({ color: C(0x8c9096), metalness: 0.85, roughness: 0.32 });
       var mDarkAl = P({ color: C(0x2a2c30), metalness: 0.6, roughness: 0.4 });
