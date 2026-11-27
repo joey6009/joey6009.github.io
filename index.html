@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -6,10 +6,7 @@
   <meta name="google-site-verification" content="1Y1KYMqkoAPgHPMUgdKJygOV5ncsDew0a-_1JIXSLZY">
 
   <title>ClampSound — Slim Monitor-Side Desktop Speaker Concept</title>
-  <meta
-    name="description"
-    content="ClampSound is a build-in-public project for slim monitor-side desktop speakers. Explore CAD renderings, prototype plans, and the path toward a 3D-printed speaker design."
-  >
+  <meta name="description" content="ClampSound is a build-in-public project for slim, desk-clamped speakers that sit beside your monitor. Explore the interactive 3D design, driver lineup, and the path toward a 3D-printed active speaker.">
 
   <style>
     :root {
@@ -167,7 +164,8 @@
 
     .hero-image,
     .image-feature,
-    .gallery figure {
+    .gallery figure,
+    .viewer-frame {
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 14px;
@@ -175,26 +173,19 @@
     }
 
     .hero-image {
+      margin: 0;
       border-radius: 16px;
     }
 
-    .hero-image img {
-      display: block;
+    .hero-viewer {
       width: 100%;
       height: 440px;
-      object-fit: cover;
-      object-position: center;
+      cursor: grab;
+      touch-action: pan-y;
     }
 
     .section-intro {
       margin-bottom: 32px;
-    }
-
-    .image-feature img {
-      display: block;
-      width: 100%;
-      max-height: 620px;
-      object-fit: cover;
     }
 
     figcaption {
@@ -231,6 +222,10 @@
       gap: 16px;
     }
 
+    .grid.three {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
     .card,
     .update {
       border: 1px solid var(--line);
@@ -243,6 +238,10 @@
       padding: 22px;
     }
 
+    .card.active {
+      border-color: var(--accent);
+    }
+
     .number {
       display: block;
       margin-bottom: 20px;
@@ -250,6 +249,18 @@
       font-size: 0.88rem;
       font-weight: 800;
       letter-spacing: 0.1em;
+    }
+
+    .status {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 3px 9px;
+      border: 1px solid var(--accent);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
     }
 
     .card p {
@@ -262,12 +273,116 @@
       border-radius: 14px;
     }
 
+    .update + .update {
+      margin-top: 18px;
+    }
+
     .update-date {
       margin: 0 0 8px;
       color: var(--accent);
       font-size: 0.85rem;
       font-weight: 800;
       letter-spacing: 0.08em;
+    }
+
+    .update ul {
+      max-width: 740px;
+      margin: 0;
+      padding-left: 20px;
+      color: var(--muted);
+    }
+
+    .update li {
+      margin-bottom: 6px;
+    }
+
+    .viewer-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .viewer-controls button {
+      padding: 8px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.88rem;
+    }
+
+    .viewer-controls button:hover,
+    .viewer-controls button.on {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .viewer-controls label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .viewer-controls input[type="range"] {
+      width: 140px;
+      accent-color: var(--accent);
+    }
+
+    .main-viewer {
+      width: 100%;
+      height: 520px;
+      cursor: grab;
+      touch-action: pan-y;
+    }
+
+    .spec-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+
+    .spec-table th,
+    .spec-table td {
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .spec-table th {
+      color: var(--accent);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+    }
+
+    .spec-table td {
+      color: var(--muted);
+    }
+
+    .spec-table td:first-child {
+      color: var(--text);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: var(--panel);
+    }
+
+    .note {
+      margin-top: 14px;
+      font-size: 0.88rem;
     }
 
     .signup-form {
@@ -345,13 +460,13 @@
         grid-template-columns: 1fr;
       }
 
-      .hero-image img {
-        height: auto;
-        max-height: 520px;
+      .grid,
+      .grid.three {
+        grid-template-columns: repeat(2, 1fr);
       }
 
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
+      .viewer-controls label {
+        margin-left: 0;
       }
     }
 
@@ -385,8 +500,17 @@
         font-size: 3.5rem;
       }
 
+      .hero-viewer {
+        height: 360px;
+      }
+
+      .main-viewer {
+        height: 400px;
+      }
+
       .gallery,
-      .grid {
+      .grid,
+      .grid.three {
         grid-template-columns: 1fr;
       }
 
@@ -408,8 +532,10 @@
 
       <nav aria-label="Main navigation">
         <a href="#concept">Concept</a>
-        <a href="#renders">Renders</a>
+        <a href="#design">3D design</a>
+        <a href="#specs">Specs</a>
         <a href="#roadmap">Roadmap</a>
+        <a href="#build-log">Build log</a>
         <a href="#follow">Follow</a>
       </nav>
     </div>
@@ -423,19 +549,17 @@
           <h1>More sound.<br>Less desk.</h1>
 
           <p class="lead">
-            A slim desktop speaker concept designed to mount beside a monitor,
-            reclaim desk space, and bring near-field audio closer to the listener.
+            A slim, desk-clamped active speaker that stands beside your monitor,
+            reclaims desk space, and puts the tweeter at ear height without a stand.
           </p>
 
-          <a class="button" href="#renders">View the renderings</a>
+          <a class="button" href="#design">Explore the 3D design</a>
           <a class="button secondary" href="#follow">Follow the build</a>
         </div>
 
         <figure class="hero-image">
-          <img
-            src="speaker_with_32inch_monitor.png"
-            alt="ClampSound speaker concept positioned beside a 32-inch monitor"
-          >
+          <div id="hero-viewer" class="hero-viewer" role="img" aria-label="Rotating 3D model of the white ClampSound speaker, version 2"></div>
+          <figcaption>Design v2 — drag to rotate.</figcaption>
         </figure>
       </div>
     </section>
@@ -448,89 +572,155 @@
 
           <p>
             Desktop speakers normally occupy valuable space on either side of a display.
-            This concept explores tall, slim speaker enclosures placed beside a monitor,
-            with a mounting approach intended to reduce the footprint on the desk.
+            ClampSound is a tall, slim enclosure that clamps to the back edge of the desk
+            and stands beside the monitor, so the desk surface stays clear and the drivers
+            sit close to ear height.
           </p>
 
           <p>
-            The current design includes multiple front-facing drivers, a compact side
-            profile, and a separate small driver section. The next phase is to validate
-            enclosure volume, driver selection, mounting safety, vibration control, and
-            real acoustic performance with a physical prototype.
+            Version 2 of the design is shaped by feedback from the r/diyaudio community.
+            The front baffle stays only 7 cm wide, while the cabinet widens toward the back
+            to gain volume. Mids and highs face the listener; the bass driver and passive
+            radiators fire from the side, where there is room for them.
           </p>
         </div>
 
-        <figure class="image-feature">
-          <img
-            src="speaker_with_32inch_monitor.png"
-            alt="Full ClampSound speaker concept shown with a 32-inch monitor"
-            loading="lazy"
-          >
-          <figcaption>
-            Early concept rendering: slim speakers positioned at the sides of a 32-inch monitor.
-          </figcaption>
-        </figure>
+        <div class="grid three">
+          <div class="card">
+            <span class="number">FRONT</span>
+            <h3>Compact MTM</h3>
+            <p>A 1" tweeter between two 2" midrange drivers on a 7 cm baffle, symmetric around ear height.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">SIDE</span>
+            <h3>Woofer + 2 passive radiators</h3>
+            <p>A 4" woofer with two 4" passive radiators firing sideways, crossed over low enough that the bass is not directional.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">SHAPE</span>
+            <h3>Trapezoid cabinet</h3>
+            <p>Narrow at the front, wider at the back: more volume and depth for the woofer, with the side drivers angled slightly forward.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">ACTIVE</span>
+            <h3>DSP crossover</h3>
+            <p>Each driver group gets its own amplifier channel. Crossovers, EQ, and bass protection are tuned in software.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">MOUNT</span>
+            <h3>Desk clamp</h3>
+            <p>A clamp on the back edge of the desk holds each speaker, with adjustable height and toe-in.</p>
+          </div>
+
+          <div class="card">
+            <span class="number">BUILD</span>
+            <h3>3D printed</h3>
+            <p>The enclosure is printed in two sections with a removable front baffle, so drivers can be swapped during testing.</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section id="renders">
+    <section id="design">
       <div class="wrap">
         <div class="section-intro">
-          <p class="eyebrow">DESIGN RENDERINGS</p>
-          <h2>Early views of the speaker concept</h2>
+          <p class="eyebrow">INTERACTIVE 3D DESIGN</p>
+          <h2>Design v2, in your browser</h2>
 
           <p>
-            These CAD renderings show the proposed front layout, angled profile,
-            narrow side profile, and intended scale beside a monitor. They represent
-            a work in progress, not a finished or acoustically verified product.
+            Rotate the model, set it on the desk next to a 32-inch monitor, change the toe-in,
+            or turn on X-ray to see how the drivers and the sealed midrange chamber fit inside.
+            Driver sizes follow the real specification sheets. This shows the intended final
+            look; the first prototype will use simple front-mounted drivers for easy testing.
           </p>
         </div>
 
-        <div class="gallery">
-          <figure>
-            <img
-              src="front_view.png"
-              alt="Front view rendering of the slim ClampSound speaker"
-              loading="lazy"
-            >
-            <figcaption>
-              Front view — three larger drivers with a compact upper driver section.
-            </figcaption>
-          </figure>
-
-          <figure>
-            <img
-              src="angle_view.png"
-              alt="Angled rendering of the ClampSound slim speaker"
-              loading="lazy"
-            >
-            <figcaption>
-              Angled view — showing the depth and rounded enclosure profile.
-            </figcaption>
-          </figure>
-
-          <figure>
-            <img
-              src="side_view.png"
-              alt="Side view rendering of the thin ClampSound speaker enclosure"
-              loading="lazy"
-            >
-            <figcaption>
-              Side view — the slim form factor intended for a monitor-side position.
-            </figcaption>
-          </figure>
-
-          <figure>
-            <img
-              src="speaker_with_32inch_monitor.png"
-              alt="Pair of ClampSound concept speakers mounted beside a 32-inch monitor"
-              loading="lazy"
-            >
-            <figcaption>
-              Monitor view — a pair of speakers shown alongside a 32-inch display.
-            </figcaption>
-          </figure>
+        <div class="viewer-frame">
+          <div class="viewer-controls" id="viewer-controls">
+            <button type="button" data-mode="single" class="on">Single speaker</button>
+            <button type="button" data-mode="front">Front</button>
+            <button type="button" data-mode="pair">On the desk</button>
+            <button type="button" id="xray-btn">X-ray: off</button>
+            <label for="toe">Toe-in <input id="toe" type="range" min="0" max="35" step="1" value="25"> <span id="toe-out">25°</span></label>
+          </div>
+          <div id="main-viewer" class="main-viewer" role="img" aria-label="Interactive 3D model of the ClampSound speaker with view controls"></div>
+          <figcaption>
+            Drag to rotate, scroll or pinch to zoom. In X-ray mode, the green block is the sealed midrange chamber.
+          </figcaption>
         </div>
+      </div>
+    </section>
+
+    <section id="specs">
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">PLANNED SPECIFICATIONS</p>
+          <h2>What goes inside</h2>
+
+          <p>
+            These are design targets, not measured results. Everything below will be
+            checked with real measurements and may change as testing goes on.
+          </p>
+        </div>
+
+        <div class="table-wrap">
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>ITEM</th>
+                <th>PLAN (PER SPEAKER)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Size</td>
+                <td>420 mm tall × 190 mm deep; 70 mm wide at the front, 120 mm at the back</td>
+              </tr>
+              <tr>
+                <td>Tweeter</td>
+                <td>1 × Dayton Audio ND25FA-4, 1" soft dome</td>
+              </tr>
+              <tr>
+                <td>Midrange</td>
+                <td>2 × Dayton Audio DMA58-8, 2" aluminum cone, in a sealed chamber of about 0.5 L</td>
+              </tr>
+              <tr>
+                <td>Woofer</td>
+                <td>1 × Dayton Audio ND105-4, 4" aluminum cone, side-firing</td>
+              </tr>
+              <tr>
+                <td>Passive radiators</td>
+                <td>2 × Dayton Audio ND105-PR, 4", side-firing, bass box of about 5 L</td>
+              </tr>
+              <tr>
+                <td>Crossovers</td>
+                <td>Active DSP, Linkwitz–Riley 4th order; starting points around 200 Hz (woofer to mids) and 2.7 kHz (mids to tweeter)</td>
+              </tr>
+              <tr>
+                <td>Amplification</td>
+                <td>3 channels per speaker</td>
+              </tr>
+              <tr>
+                <td>Enclosure</td>
+                <td>3D printed in two glued sections; PETG for prototypes</td>
+              </tr>
+              <tr>
+                <td>Mounting</td>
+                <td>Desk-edge clamp with height and toe-in adjustment</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p class="note">
+          Why a low woofer crossover? Because the woofer fires sideways, it has to hand over
+          to the front-facing mids before its output becomes directional. Two 2" mids in an
+          MTM layout give enough headroom to reach down that low at desktop listening levels.
+        </p>
       </div>
     </section>
 
@@ -542,28 +732,29 @@
         </div>
 
         <div class="grid">
-          <div class="card">
+          <div class="card active">
+            <span class="status">IN PROGRESS</span>
             <span class="number">01 — DESIGN</span>
             <h3>Define the system</h3>
-            <p>Confirm dimensions, enclosure volume, drivers, electronics, and mounting method.</p>
+            <p>Driver lineup, cabinet shape, and crossover plan are chosen. Next: test boxes and simulations to confirm them.</p>
           </div>
 
           <div class="card">
             <span class="number">02 — 3D PRINT</span>
             <h3>Build the enclosure</h3>
-            <p>Create the first printable enclosure and test the practical assembly process.</p>
+            <p>Print test boxes first, then a full prototype with a removable front baffle for easy driver swaps.</p>
           </div>
 
           <div class="card">
             <span class="number">03 — TEST</span>
             <h3>Measure and listen</h3>
-            <p>Evaluate mounting stability, vibration, desk fit, sound quality, and usability.</p>
+            <p>Measure frequency response and distortion, tune the DSP, and check clamp stability and vibration.</p>
           </div>
 
           <div class="card">
             <span class="number">04 — REFINE</span>
             <h3>Improve in public</h3>
-            <p>Share findings, collect feedback, and revise the design through later versions.</p>
+            <p>Share measurements and lessons learned, collect feedback, and revise the design.</p>
           </div>
         </div>
       </div>
@@ -575,6 +766,27 @@
           <p class="eyebrow">BUILD LOG</p>
           <h2>Current project status</h2>
         </div>
+
+        <article class="update">
+          <p class="update-date">UPDATE 02 — DESIGN V2 · NOVEMBER 2026</p>
+          <h3>New cabinet shape, real drivers, and a test plan</h3>
+          <p>
+            Thanks to everyone on r/diyaudio who commented on the first concept. Your feedback
+            on crossover frequency, toe-in, and mounting shaped most of these changes:
+          </p>
+          <ul>
+            <li>The woofer-to-mid crossover moves down to roughly 150–200 Hz, because a side-firing woofer has to hand over early.</li>
+            <li>Two 2" mids in an MTM layout replace the single mid, for more headroom at that low crossover.</li>
+            <li>The cabinet becomes a trapezoid: same 7 cm front, wider back, more bass volume.</li>
+            <li>The clamp design now includes adjustable height and 20–30° of toe-in.</li>
+            <li>The driver lineup is now all Dayton Audio, and the 3D model uses their real dimensions.</li>
+          </ul>
+          <p>
+            Next: build a small sealed test box to measure midrange distortion at different
+            crossover points, simulate the woofer and passive radiators, then print the first
+            test enclosures.
+          </p>
+        </article>
 
         <article class="update">
           <p class="update-date">UPDATE 01 — CONCEPT STAGE</p>
@@ -589,33 +801,58 @@
       </div>
     </section>
 
+    <section id="renders">
+      <div class="wrap">
+        <div class="section-intro">
+          <p class="eyebrow">CONCEPT V1 ARCHIVE</p>
+          <h2>Where the design started</h2>
+
+          <p>
+            The original CAD renderings, kept here for reference. Version 2 changed the
+            cabinet shape, driver layout, and colour based on community feedback.
+          </p>
+        </div>
+
+        <div class="gallery">
+          <figure>
+            <img src="front_view.png" alt="Front view rendering of the first ClampSound concept" loading="lazy">
+            <figcaption>v1 front view — three side drivers with a compact upper driver section.</figcaption>
+          </figure>
+
+          <figure>
+            <img src="angle_view.png" alt="Angled rendering of the first ClampSound concept" loading="lazy">
+            <figcaption>v1 angled view — rectangular cabinet with rounded edges.</figcaption>
+          </figure>
+
+          <figure>
+            <img src="side_view.png" alt="Side view rendering of the first ClampSound concept" loading="lazy">
+            <figcaption>v1 side view — the narrow front face.</figcaption>
+          </figure>
+
+          <figure>
+            <img src="speaker_with_32inch_monitor.png" alt="Pair of first-concept ClampSound speakers beside a 32-inch monitor" loading="lazy">
+            <figcaption>v1 monitor view — a pair beside a 32-inch display.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <section id="follow">
       <div class="wrap">
         <p class="eyebrow">FOLLOW THE BUILD</p>
         <h2>Get ClampSound updates</h2>
 
         <p>
-          Enter your email to receive occasional updates about new CAD renderings,
-          3D-printed prototypes, testing, design decisions, and opportunities to
+          Enter your email to receive occasional updates about new designs,
+          3D-printed prototypes, measurements, design decisions, and opportunities to
           give feedback. You can unsubscribe at any time.
         </p>
 
-        <form
-          action="https://buttondown.com/api/emails/embed-subscribe/ClampSound"
-          method="post"
-          class="signup-form"
-        >
+        <form action="https://buttondown.com/api/emails/embed-subscribe/ClampSound" method="post" class="signup-form">
           <label for="bd-email">Email address</label>
 
           <div class="signup-row">
-            <input
-              id="bd-email"
-              type="email"
-              name="email"
-              placeholder="you@example.com"
-              autocomplete="email"
-              required
-            >
+            <input id="bd-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
 
             <button type="submit">Get updates</button>
           </div>
@@ -628,11 +865,7 @@
           </p>
 
           <p class="powered-by">
-            <a
-              href="https://buttondown.com/refer/ClampSound"
-              target="_blank"
-              rel="noopener"
-            >
+            <a href="https://buttondown.com/refer/ClampSound" target="_blank" rel="noopener">
               Powered by Buttondown
             </a>
           </p>
@@ -663,5 +896,228 @@
       ClampSound is an independent build-in-public speaker concept. © 2026
     </div>
   </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script>
+  (function () {
+    if (!window.THREE) return;
+
+    var H = 42, D = 19, W0 = 7, W1 = 12, R = 2.5, WT = 0.5, TY = 9.5, GAP = 6.1, SIDE_Z = -1.5, MC_D = 5;
+    var ZF = 27, DESK_R = 6, MON_Y = 27, LIFT = 5;
+    var V = function (x, y, z) { return new THREE.Vector3(x, y, z); };
+
+    function createViewer(el, opts) {
+      var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true });
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.setClearColor(0, 0);
+      el.appendChild(renderer.domElement);
+
+      var scene = new THREE.Scene();
+      var camera = new THREE.PerspectiveCamera(35, 1, 1, 3000);
+      var controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.autoRotate = !!opts.autoRotate;
+      controls.autoRotateSpeed = 1.2;
+      if (opts.noZoom) controls.enableZoom = false;
+
+      scene.add(new THREE.HemisphereLight(0xffffff, 0x707870, 0.85));
+      scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+      var dl = new THREE.DirectionalLight(0xffffff, 0.8); dl.position.set(80, 120, 160); scene.add(dl);
+      var dl2 = new THREE.DirectionalLight(0xffffff, 0.35); dl2.position.set(-120, 40, 60); scene.add(dl2);
+
+      function M(c, r, m) { return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m || 0, side: THREE.DoubleSide }); }
+      var WHITE = 0xefede8;
+      var mW = M(WHITE, 0.4), mWC = M(0xe2dfd8, 0.48), mBlk = M(0x121212, 0.75), mDark = M(0x1c1c1c, 0.55),
+          mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5), mGray = M(0x4a4e54, 0.45, 0.2),
+          mScr = M(0x080808, 0.25), mDesk = M(0x8a6d4c, 0.75), mWall = M(0x2b302b, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5),
+          mFrame = M(0x6b6f75, 0.5, 0.3), mMag = M(0x33363a, 0.4, 0.6);
+      var mChamber = new THREE.MeshStandardMaterial({ color: 0xb7ef61, transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide });
+      var mCab = new THREE.MeshStandardMaterial({ color: WHITE, roughness: 0.4, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
+      var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
+
+      var state = { mode: opts.mode || 'single', toe: 25, xray: false };
+      var root = null;
+
+      function rr(s, x, y, w, h, r) {
+        s.moveTo(x + r, y); s.lineTo(x + w - r, y); s.absarc(x + w - r, y + r, r, -Math.PI / 2, 0, false);
+        s.lineTo(x + w, y + h - r); s.absarc(x + w - r, y + h - r, r, 0, Math.PI / 2, false);
+        s.lineTo(x + r, y + h); s.absarc(x + r, y + h - r, r, Math.PI / 2, Math.PI, false);
+        s.lineTo(x, y + r); s.absarc(x + r, y + r, r, Math.PI, 1.5 * Math.PI, false);
+      }
+      function lathe(pts, m) {
+        var o = new THREE.Mesh(new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), 72), m);
+        o.rotation.x = Math.PI / 2; return o;
+      }
+      function roll(r1, r2, base, crown, m) {
+        var pts = [];
+        for (var i = 0; i <= 20; i++) { var t = Math.PI * i / 20; pts.push([(r1 + r2) / 2 + (r2 - r1) / 2 * Math.cos(t), base + (crown - base) * Math.sin(t)]); }
+        return lathe(pts, m);
+      }
+      function dome(r, m, z, sz) {
+        var o = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), m);
+        o.rotation.x = Math.PI / 2; o.scale.y = sz || 1; o.position.z = z; return o;
+      }
+      function disc(r, m, z) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 72), m); o.position.z = z; return o; }
+      function tube(r, h, m, z0) { var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 72, 1, true), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
+      function cyl(r1, r2, z0, z1, m) { var h = z0 - z1; var o = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, 40), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
+      function mask(r) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 72), mMask); o.position.z = 0.01; o.renderOrder = 1; return o; }
+
+      function woofer() {
+        var g = new THREE.Group();
+        g.add(mask(4.7)); g.add(tube(4.7, 0.75, mW, 0)); g.add(roll(4.05, 4.7, -0.65, -0.08, mBlk));
+        g.add(lathe([[1.6, -2.0], [4.05, -0.62]], mWC)); g.add(dome(1.65, mW, -2.0, 0.5));
+        g.add(cyl(5.25, 5.25, -WT, -WT - 0.4, mFrame)); g.add(cyl(4.4, 2.2, -WT - 0.4, -4.6, mFrame)); g.add(cyl(2.1, 2.1, -4.6, -6.7, mMag));
+        return g;
+      }
+      function pr() {
+        var g = new THREE.Group();
+        g.add(mask(4.7)); g.add(tube(4.7, 0.75, mW, 0)); g.add(roll(4.05, 4.7, -0.65, -0.08, mBlk));
+        g.add(lathe([[1.3, -1.25], [4.05, -0.62]], mWC)); g.add(disc(1.32, mW, -1.25));
+        g.add(cyl(5.25, 5.25, -WT, -WT - 0.4, mFrame)); g.add(cyl(4.4, 2.6, -WT - 0.4, -4.2, mFrame)); g.add(cyl(0.4, 0.4, -4.2, -5.6, mMag));
+        return g;
+      }
+      function mid() {
+        var g = new THREE.Group();
+        g.add(mask(2.5)); g.add(tube(2.5, 0.6, mW, 0)); g.add(roll(1.95, 2.5, -0.5, -0.06, mBlk));
+        g.add(lathe([[0.75, -1.35], [1.95, -0.48]], mAl)); g.add(dome(0.75, mAl, -1.35, 0.5));
+        var f = new THREE.Mesh(new THREE.BoxGeometry(5.6, 5.6, 0.4), mFrame); f.position.z = -WT - 0.2; g.add(f);
+        g.add(cyl(1.7, 1.7, -WT - 0.4, -3.8, mMag));
+        return g;
+      }
+      function tw() {
+        var g = new THREE.Group();
+        g.add(cyl(3.3, 3.3, 0.35, 0, mDark));
+        var b = new THREE.Mesh(new THREE.TorusGeometry(3.15, 0.18, 12, 64), mDark); b.position.z = 0.2; g.add(b);
+        g.add(disc(1.7, mBlk, 0.36)); g.add(dome(1.25, mDome, 0.36, 0.75)); g.add(cyl(2.2, 2.2, -WT, -3.6, mMag));
+        return g;
+      }
+      function aAt(z, a0, a1) { return a0 + (a1 - a0) * (D / 2 - z) / D; }
+
+      function speaker(side) {
+        var g = new THREE.Group(), a0 = W0 / 2, a1 = W1 / 2;
+        var sh = new THREE.Shape(); rr(sh, -a0, -H / 2, W0, H, R);
+        var geo = new THREE.ExtrudeGeometry(sh, { depth: D, bevelEnabled: false, curveSegments: 20 });
+        geo.translate(0, 0, -D / 2);
+        var p = geo.attributes.position;
+        for (var i = 0; i < p.count; i++) {
+          var x = p.getX(i), z = p.getZ(i);
+          if (Math.abs(x) > 1e-6) p.setX(i, x + Math.sign(x) * (a1 - a0) * (D / 2 - z) / D);
+        }
+        geo.computeVertexNormals();
+        var cab = new THREE.Mesh(geo, mCab); cab.renderOrder = 2; g.add(cab);
+
+        var fz = D / 2;
+        var t = tw(); t.position.set(0, TY, fz); g.add(t);
+        [TY + GAP, TY - GAP].forEach(function (y) { var m = mid(); m.position.set(0, y, fz); g.add(m); });
+
+        var hc = 2 * GAP + 7, cw = 2 * (aAt(D / 2 - WT - MC_D / 2, a0, a1) - WT);
+        var ch = new THREE.Mesh(new THREE.BoxGeometry(cw, hc, MC_D), mChamber);
+        ch.position.set(0, TY, D / 2 - WT - MC_D / 2); ch.visible = state.xray; ch.renderOrder = 5; g.add(ch);
+
+        var n = V(side, 0, (a1 - a0) / D).normalize();
+        var q = new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), n);
+        var xc = aAt(SIDE_Z, a0, a1);
+        [[0, woofer], [11.5, pr], [-11.5, pr]].forEach(function (it) {
+          var d = it[1](); d.quaternion.copy(q); d.position.set(side * xc, it[0], SIDE_Z); g.add(d);
+        });
+        g.traverse(function (o) { if (o.isMesh && o.renderOrder === 0) o.renderOrder = 3; });
+        return g;
+      }
+
+      function box(w, h, d, m, x, y, z) { var o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); return o; }
+      function rod(a, b, r, m) {
+        var v = new THREE.Vector3().subVectors(b, a);
+        var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, v.length(), 24), m);
+        o.position.copy(a).addScaledVector(v, 0.5);
+        o.quaternion.setFromUnitVectors(V(0, 1, 0), v.clone().normalize()); return o;
+      }
+      function clamp(g, x) {
+        g.add(box(6, 0.8, 8, mMetal, x, 0.4, DESK_R + 4)); g.add(box(6, 7.6, 1, mMetal, x, -3, DESK_R - 0.5));
+        g.add(box(6, 0.8, 6, mMetal, x, -6.4, DESK_R + 3)); g.add(rod(V(x, -9, DESK_R + 4), V(x, -2.6, DESK_R + 4), 0.45, mMetal));
+      }
+      function env(g) {
+        g.add(box(400, 200, 1, mWall, 0, 60, -0.5)); g.add(box(170, 2.5, 75, mDesk, 0, -1.25, DESK_R + 37.5));
+        g.add(box(72.8, 41.8, 2, mGray, 0, MON_Y, ZF - 1));
+        var s = new THREE.Mesh(new THREE.PlaneGeometry(70.8, 39.8), mScr); s.position.set(0, MON_Y, ZF + 0.01); g.add(s);
+        g.add(box(44, 26, 4, mGray, 0, MON_Y, ZF - 4)); g.add(box(10, 10, 0.6, mMetal, 0, MON_Y, ZF - 6.3));
+        clamp(g, 0);
+        var px = DESK_R + 4;
+        g.add(rod(V(0, 0.8, px), V(0, 46, px), 1.6, mMetal));
+        var j1 = V(16, 43, px + 5), j2 = V(10, MON_Y + 2, ZF - 8);
+        g.add(rod(V(0, 43, px), j1, 1.3, mMetal)); g.add(rod(j1, j2, 1.2, mMetal)); g.add(rod(j2, V(0, MON_Y, ZF - 6.6), 1.0, mMetal));
+      }
+
+      function build() {
+        if (root) { scene.remove(root); root.traverse(function (o) { if (o.geometry) o.geometry.dispose(); }); }
+        mCab.transparent = state.xray; mCab.opacity = state.xray ? 0.16 : 1; mCab.depthWrite = !state.xray; mCab.needsUpdate = true;
+        root = new THREE.Group();
+        if (state.mode !== 'pair') {
+          root.add(speaker(1));
+        } else {
+          env(root);
+          var th = state.toe * Math.PI / 180, YS = MON_Y + LIFT, a0 = W0 / 2, c = Math.cos(th), s = Math.sin(th);
+          var cx = 36.4 + 1.5 + a0 * c + (D / 2) * s, cz = ZF - (-a0 * s + (D / 2) * c);
+          [[1, -th], [-1, th]].forEach(function (it) {
+            var side = it[0], sp = speaker(side);
+            sp.rotation.y = it[1]; sp.position.set(side * cx, YS, cz); sp.updateMatrixWorld(true); root.add(sp);
+            var at = sp.localToWorld(V(0, -H / 2, -4)), bx = at.x, yb = YS - H / 2 - 1.2, pz = DESK_R + 4;
+            clamp(root, bx);
+            root.add(rod(V(bx, 0.8, pz), V(bx, yb, pz), 1.1, mMetal));
+            root.add(rod(V(bx, yb, pz), V(at.x, yb, at.z), 0.9, mMetal));
+            root.add(rod(V(at.x, yb, at.z), V(at.x, YS - H / 2, at.z), 1.4, mMetal));
+          });
+        }
+        scene.add(root);
+      }
+      function setView() {
+        if (state.mode === 'single') { camera.position.set(55, 14, 42); controls.target.set(0, 0, 0); }
+        else if (state.mode === 'front') { camera.position.set(0, 4, 110); controls.target.set(0, 0, 0); }
+        else { camera.position.set(-75, 85, 175); controls.target.set(0, 24, 18); }
+        controls.update();
+      }
+      function resize() {
+        var w = el.clientWidth, h = el.clientHeight;
+        renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
+      }
+      window.addEventListener('resize', resize);
+      build(); setView(); resize();
+      (function loop() { requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); })();
+
+      return {
+        setMode: function (m) { state.mode = m; build(); setView(); },
+        setToe: function (t) { state.toe = t; if (state.mode === 'pair') build(); },
+        toggleXray: function () { state.xray = !state.xray; build(); return state.xray; }
+      };
+    }
+
+    var heroEl = document.getElementById('hero-viewer');
+    if (heroEl) createViewer(heroEl, { mode: 'single', autoRotate: true, noZoom: true });
+
+    var mainEl = document.getElementById('main-viewer');
+    if (mainEl) {
+      var viewer = createViewer(mainEl, { mode: 'single' });
+      var buttons = document.querySelectorAll('#viewer-controls button[data-mode]');
+      buttons.forEach(function (b) {
+        b.addEventListener('click', function () {
+          buttons.forEach(function (x) { x.classList.remove('on'); });
+          b.classList.add('on');
+          viewer.setMode(b.getAttribute('data-mode'));
+        });
+      });
+      var xb = document.getElementById('xray-btn');
+      xb.addEventListener('click', function () {
+        var on = viewer.toggleXray();
+        xb.textContent = 'X-ray: ' + (on ? 'on' : 'off');
+        xb.classList.toggle('on', on);
+      });
+      var toe = document.getElementById('toe'), toeOut = document.getElementById('toe-out');
+      toe.addEventListener('input', function () {
+        toeOut.textContent = toe.value + '°';
+        viewer.setToe(parseFloat(toe.value));
+      });
+    }
+  })();
+  </script>
 </body>
 </html>
