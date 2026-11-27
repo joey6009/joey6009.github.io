@@ -1157,7 +1157,7 @@
         var kb = rbox(36, 1.6, 12.5, 1, mKeyBase); kb.position.set(-4, 0, DESK_R + 52); g.add(kb);
         for (var r = 0; r < 5; r++) for (var c = 0; c < 15; c++) g.add(box(1.9, 0.7, 1.9, mKey, -20.8 + c * 2.4, 1.9, DESK_R + 47.6 + r * 2.25));
         var mouse = new THREE.Mesh(new THREE.SphereGeometry(3, 32, 16), mKey); mouse.scale.set(0.85, 0.45, 1.3); mouse.position.set(24, 0.6, DESK_R + 53); mouse.castShadow = true; g.add(mouse);
-        var mug = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3, 8.5, 40), mMug); mug.position.set(50, 4.25, DESK_R + 42); mug.castShadow = true; g.add(mug);
+        var mug = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3, 8.5, 40), mMug); mug.position.set(-62, 4.25, DESK_R + 46); mug.castShadow = true; g.add(mug);
       }
 
       function build() {
