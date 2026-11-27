@@ -770,7 +770,7 @@
       side:     { mode: 'single', xray: false, pos: [85, 6, 18], target: [0, 0, 0] },
       xray:     { mode: 'single', xray: true,  pos: [60, 30, 55], target: [0, 2, 0] },
       desk:     { mode: 'pair',   xray: false, pos: [-115, 110, 255], target: [0, 26, 18] },
-      hero:     { mode: 'pair',   xray: false, pos: [-62, 62, 168], target: [0, 22, 18] }
+      hero:     { mode: 'pair',   xray: false, pos: [-72, 66, 196], target: [0, 21, 18] }
     };
 
     function createViewer(el, opts) {
@@ -815,7 +815,7 @@
       var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
 
       var palette = (opts.colors || []).map(function (c) { return { color: new THREE.Color(c.hex), zh: c.zh, en: c.en }; });
-      var cIdx = 0, cT = 0, lastT = performance.now(), tmpC = new THREE.Color();
+      var cIdx = 0, cT = 0, announced = false, lastT = performance.now(), tmpC = new THREE.Color();
       var HOLD = 3.5, FADE = 1.2;
       function applyColor(c) {
         mCab.color.copy(c); mW.color.copy(c); mWC.color.copy(c).multiplyScalar(0.94);
@@ -997,8 +997,9 @@
           cT += dt;
           if (cT > HOLD) {
             var f = Math.min(1, (cT - HOLD) / FADE), nxt = (cIdx + 1) % palette.length;
+            if (!announced) { announced = true; if (opts.onColor) opts.onColor(palette[nxt]); }
             tmpC.copy(palette[cIdx].color).lerp(palette[nxt].color, f); applyColor(tmpC);
-            if (f >= 1) { cIdx = nxt; cT = 0; if (opts.onColor) opts.onColor(palette[cIdx]); }
+            if (f >= 1) { cIdx = nxt; cT = 0; announced = false; }
           }
         }
         if (opts.sway) {
