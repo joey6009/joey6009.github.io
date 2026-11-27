@@ -905,7 +905,7 @@
       key.position.set(70, 150, 130); key.target.position.set(0, 20, 20);
       key.castShadow = true;
       key.shadow.mapSize.set(SMALL ? 1024 : 2048, SMALL ? 1024 : 2048);
-      key.shadow.radius = 6; key.shadow.bias = -0.0004;
+      key.shadow.radius = 6; key.shadow.bias = -0.0004; key.shadow.normalBias = 0.35;
       key.shadow.camera.left = -110; key.shadow.camera.right = 110; key.shadow.camera.top = 110; key.shadow.camera.bottom = -70;
       key.shadow.camera.near = 10; key.shadow.camera.far = 500;
       scene.add(key); scene.add(key.target);
@@ -934,6 +934,10 @@
       var mKeyBase = P({ color: C(0xcfcbc4), roughness: 0.6, metalness: 0.2 });
       var mMug = P({ color: C(0x2f5d50), roughness: 0.35, clearcoat: 0.6 });
       var mScreen = new THREE.MeshBasicMaterial({ map: screenTexture(), toneMapped: false });
+      new THREE.TextureLoader().load('assets/monitor-wallpaper.jpg', function (t) {
+        t.encoding = THREE.sRGBEncoding; t.anisotropy = 8;
+        mScreen.map = t; mScreen.needsUpdate = true;
+      });
       var mChamber = new THREE.MeshStandardMaterial({ color: C(0xb4532a), transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide });
       var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
 
@@ -1068,9 +1072,9 @@
         g.add(box(44, 26, 3.5, mBack, 0, MON_Y, ZF - 2.9)); g.add(box(10, 10, 0.6, mMetal, 0, MON_Y, ZF - 5));
         clamp(g, 0);
         var px = DESK_R + 4;
-        g.add(rod(V(0, 0.8, px), V(0, 46, px), 1.6, mMetal));
-        var j1 = V(16, 43, px + 5), j2 = V(10, MON_Y + 2, ZF - 8);
-        g.add(rod(V(0, 43, px), j1, 1.3, mMetal)); g.add(rod(j1, j2, 1.2, mMetal)); g.add(rod(j2, V(0, MON_Y, ZF - 5.3), 1.0, mMetal));
+        g.add(rod(V(0, 0.8, px), V(0, 36, px), 1.6, mMetal));
+        var j1 = V(16, 34, px + 5), j2 = V(10, MON_Y + 1, ZF - 8);
+        g.add(rod(V(0, 34, px), j1, 1.3, mMetal)); g.add(rod(j1, j2, 1.2, mMetal)); g.add(rod(j2, V(0, MON_Y, ZF - 5.3), 1.0, mMetal));
         var kb = rbox(36, 1.6, 12.5, 1, mKeyBase); kb.position.set(-4, 0, DESK_R + 52); g.add(kb);
         for (var r = 0; r < 5; r++) for (var c = 0; c < 15; c++) g.add(box(1.9, 0.7, 1.9, mKey, -20.8 + c * 2.4, 1.9, DESK_R + 47.6 + r * 2.25));
         var mouse = new THREE.Mesh(new THREE.SphereGeometry(3, 32, 16), mKey); mouse.scale.set(0.85, 0.45, 1.3); mouse.position.set(24, 0.6, DESK_R + 53); mouse.castShadow = true; g.add(mouse);
