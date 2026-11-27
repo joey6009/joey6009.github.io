@@ -755,7 +755,7 @@
       front:    { mode: 'single', xray: false, pos: [8, 6, 95], target: [0, 4, 0] },
       side:     { mode: 'single', xray: false, pos: [85, 6, 18], target: [0, 0, 0] },
       xray:     { mode: 'single', xray: true,  pos: [60, 30, 55], target: [0, 2, 0] },
-      desk:     { mode: 'pair',   xray: false, pos: [-75, 85, 175], target: [0, 24, 18] }
+      desk:     { mode: 'pair',   xray: false, pos: [-115, 110, 255], target: [0, 26, 18] }
     };
 
     function createViewer(el, opts) {
@@ -785,8 +785,8 @@
       var WHITE = 0xf1efea;
       var mW = M(WHITE, 0.42, 0, 0x2a2a2a), mWC = M(0xe8e5de, 0.5, 0, 0x3a3a3a), mBlk = M(0x141414, 0.75),
           mDark = M(0x1c1c1c, 0.55), mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5),
-          mGray = M(0x3d4045, 0.45, 0.2), mScr = M(0x0a0a0a, 0.25), mDesk = M(0xc9a97c, 0.75),
-          mWall = M(0xe9e5dd, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
+          mGray = M(0x3d4045, 0.45, 0.2), mScr = M(0x0a0a0a, 0.25), mDesk = M(0x9c7a52, 0.8),
+          mWall = M(0xdcd7cd, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
       var mChamber = new THREE.MeshStandardMaterial({ color: 0xb4532a, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide });
       var mCab = new THREE.MeshStandardMaterial({ color: WHITE, roughness: 0.42, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
       var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
