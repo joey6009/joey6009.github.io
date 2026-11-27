@@ -764,7 +764,7 @@
         repo: 'joey6009/joey6009.github.io',
         repoId: 'R_kgDOTqKL1Q',
         category: 'General',
-        categoryId: ''
+        categoryId: 'DIC_kwDOTqKL1c4DMEfo'
       };
       var slot = document.getElementById('giscus-slot');
       if (!slot || !GISCUS.categoryId) return;
@@ -805,6 +805,8 @@
     var H = 42, D = 19, W0 = 7, W1 = 12, R = 2.5, WT = 0.5, TY = 9.5, GAP = 6.1, SIDE_Z = -1.5, MC_D = 5;
     var ZF = 27, DESK_R = 6, MON_Y = 27, LIFT = 0;
     var V = function (x, y, z) { return new THREE.Vector3(x, y, z); };
+    var C = function (h) { return new THREE.Color(h).convertSRGBToLinear(); };
+    var SMALL = window.innerWidth < 720;
 
     var VIEWS = {
       overview: { mode: 'single', xray: false, pos: [55, 14, 42], target: [0, 0, 0] },
@@ -812,57 +814,133 @@
       side:     { mode: 'single', xray: false, pos: [85, 6, 18], target: [0, 0, 0] },
       xray:     { mode: 'single', xray: true,  pos: [60, 30, 55], target: [0, 2, 0] },
       desk:     { mode: 'pair',   xray: false, pos: [-115, 110, 255], target: [0, 26, 18] },
-      hero:     { mode: 'pair',   xray: false, pos: [-72, 66, 196], target: [0, 21, 18] }
+      hero:     { mode: 'pair',   xray: false, pos: [-70, 64, 196], target: [0, 22, 20] }
     };
+
+    function canvasTex(w, h, draw) {
+      var c = document.createElement('canvas'); c.width = w; c.height = h;
+      draw(c.getContext('2d'), w, h);
+      var t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = 8;
+      return t;
+    }
+    function seeded(seed) { return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }; }
+    function woodTexture() {
+      var rnd = seeded(42);
+      return canvasTex(1024, 512, function (g, w, h) {
+        g.fillStyle = '#9a7650'; g.fillRect(0, 0, w, h);
+        for (var i = 0; i < 260; i++) {
+          var y = rnd() * h;
+          g.strokeStyle = 'rgba(' + (70 + rnd() * 40 | 0) + ',' + (45 + rnd() * 25 | 0) + ',' + (25 + rnd() * 15 | 0) + ',' + (0.08 + rnd() * 0.18) + ')';
+          g.lineWidth = 0.6 + rnd() * 2.2; g.beginPath(); g.moveTo(0, y);
+          for (var x = 0; x <= w; x += 32) g.lineTo(x, y + Math.sin(x * 0.004 + i) * 6 + Math.sin(x * 0.02 + i * 3) * 1.5);
+          g.stroke();
+        }
+      });
+    }
+    function screenTexture() {
+      return canvasTex(1280, 720, function (g, w, h) {
+        var gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#1d2a3f'); gr.addColorStop(1, '#3b2f4f');
+        g.fillStyle = gr; g.fillRect(0, 0, w, h);
+        g.fillStyle = '#f4f2ee'; g.fillRect(170, 110, 940, 500);
+        g.fillStyle = '#e3e0da'; g.fillRect(170, 110, 940, 34);
+        g.fillStyle = '#555'; g.font = '20px sans-serif'; g.fillText('ClampSound — frequency response', 190, 134);
+        g.strokeStyle = '#d5d1ca'; g.lineWidth = 1;
+        for (var i = 0; i < 9; i++) { var y = 180 + i * 45; g.beginPath(); g.moveTo(220, y); g.lineTo(1080, y); g.stroke(); }
+        for (var j = 0; j < 10; j++) { var x = 220 + j * 95; g.beginPath(); g.moveTo(x, 170); g.lineTo(x, 570); g.stroke(); }
+        function curve(col, off, amp) {
+          g.strokeStyle = col; g.lineWidth = 3; g.beginPath();
+          for (var x = 220; x <= 1080; x += 4) {
+            var u = (x - 220) / 860;
+            g.lineTo(x, 330 + off + Math.sin(u * 28) * amp * (0.4 + u) - (u < 0.12 ? (0.12 - u) * 900 : 0) + (u > 0.92 ? (u - 0.92) * 700 : 0));
+          }
+          g.stroke();
+        }
+        curve('#b4532a', 0, 6); curve('#2f6fb3', 60, 9);
+      });
+    }
 
     function createViewer(el, opts) {
       var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, stencil: true });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       renderer.setClearColor(0, 0);
+      renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.05;
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       el.appendChild(renderer.domElement);
 
       var scene = new THREE.Scene();
+      (function () {
+        var env = new THREE.Scene();
+        var room = new THREE.Mesh(new THREE.BoxGeometry(100, 60, 100), new THREE.MeshStandardMaterial({ color: C(0x8a8276), side: THREE.BackSide, roughness: 1 }));
+        room.position.y = 20; env.add(room);
+        function panel(w, h, k, x, y, z, rx, ry) {
+          var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(k, k, k) }));
+          m.position.set(x, y, z); m.rotation.set(rx, ry, 0); env.add(m);
+        }
+        panel(40, 25, 6, -20, 45, 10, Math.PI / 2, 0);
+        panel(30, 40, 3, 49, 20, 0, 0, -Math.PI / 2);
+        panel(50, 20, 1.6, 0, 20, 49, 0, Math.PI);
+        var pm = new THREE.PMREMGenerator(renderer);
+        scene.environment = pm.fromScene(env, 0.04).texture;
+        pm.dispose();
+      })();
+
       var camera = new THREE.PerspectiveCamera(opts.fov || 32, 1, 1, 3000);
       var controls = new THREE.OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
+      controls.enablePan = false;
+      controls.enableZoom = false;
       controls.autoRotate = !!opts.autoRotate;
       controls.autoRotateSpeed = 1.1;
       if (opts.sway) {
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 0.5;
-        controls.minAzimuthAngle = -0.75;
-        controls.maxAzimuthAngle = 0.75;
-        controls.minPolarAngle = 0.6;
-        controls.maxPolarAngle = 1.45;
+        controls.autoRotate = true; controls.autoRotateSpeed = 0.5;
+        controls.minAzimuthAngle = -0.75; controls.maxAzimuthAngle = 0.75;
+        controls.minPolarAngle = 0.6; controls.maxPolarAngle = 1.45;
       }
-      controls.enablePan = false;
-      controls.enableZoom = false;
 
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xb8b2a6, 0.75));
-      scene.add(new THREE.AmbientLight(0xffffff, 0.25));
-      var dl = new THREE.DirectionalLight(0xffffff, 0.75); dl.position.set(80, 120, 160); scene.add(dl);
-      var dl2 = new THREE.DirectionalLight(0xffffff, 0.35); dl2.position.set(-120, 40, 60); scene.add(dl2);
-      var dl3 = new THREE.DirectionalLight(0xffffff, 0.3); dl3.position.set(120, 20, -40); scene.add(dl3);
+      scene.add(new THREE.HemisphereLight(C(0xfff6e8), C(0x6e5a44), 0.45));
+      var key = new THREE.DirectionalLight(C(0xfff1df), 1.6);
+      key.position.set(70, 150, 130); key.target.position.set(0, 20, 20);
+      key.castShadow = true;
+      key.shadow.mapSize.set(SMALL ? 1024 : 2048, SMALL ? 1024 : 2048);
+      key.shadow.radius = 6; key.shadow.bias = -0.0004;
+      key.shadow.camera.left = -110; key.shadow.camera.right = 110; key.shadow.camera.top = 110; key.shadow.camera.bottom = -70;
+      key.shadow.camera.near = 10; key.shadow.camera.far = 500;
+      scene.add(key); scene.add(key.target);
+      var rim = new THREE.DirectionalLight(C(0xdfe8ff), 0.5); rim.position.set(-120, 60, -30); scene.add(rim);
+      var fill = new THREE.DirectionalLight(C(0xffffff), 0.35); fill.position.set(120, 20, 80); scene.add(fill);
 
-      function M(c, r, m, e) {
-        return new THREE.MeshStandardMaterial({ color: c, roughness: r, metalness: m || 0, emissive: e || 0x000000, side: THREE.DoubleSide });
-      }
-      var WHITE = 0xf1efea;
-      var mW = M(WHITE, 0.42, 0, 0x2a2a2a), mWC = M(0xe8e5de, 0.5, 0, 0x3a3a3a), mBlk = M(0x141414, 0.75),
-          mDark = M(0x1c1c1c, 0.55), mAl = M(0x3b3d40, 0.35, 0.5), mDome = M(0x2a2a2a, 0.5),
-          mGray = M(0x3d4045, 0.45, 0.2), mScr = M(0x0a0a0a, 0.25), mDesk = M(0x7a5c3d, 0.8),
-          mWall = M(0x9c8f7a, 0.95), mMetal = M(0x2c2f33, 0.4, 0.5), mFrame = M(0x7b7f85, 0.5, 0.3), mMag = M(0x44474c, 0.4, 0.6);
-      var mChamber = new THREE.MeshStandardMaterial({ color: 0xb4532a, transparent: true, opacity: 0.28, depthWrite: false, side: THREE.DoubleSide });
-      var mCab = new THREE.MeshStandardMaterial({ color: WHITE, roughness: 0.42, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
+      function P(o) { o.side = THREE.DoubleSide; return new THREE.MeshPhysicalMaterial(o); }
+      var BASE = 0xf1efea;
+      var mCab = new THREE.MeshPhysicalMaterial({ color: C(BASE), roughness: 0.42, clearcoat: 0.25, clearcoatRoughness: 0.35, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.NotEqualStencilFunc });
+      var mPaint = P({ color: C(BASE), roughness: 0.4, clearcoat: 0.2 });
+      var mPaint2 = P({ color: C(0xe7e4dd), roughness: 0.48 });
+      var mRubber = P({ color: C(0x121212), roughness: 0.85 });
+      var mAl = P({ color: C(0x8c9096), metalness: 0.85, roughness: 0.32 });
+      var mDarkAl = P({ color: C(0x2a2c30), metalness: 0.6, roughness: 0.4 });
+      var mSilk = P({ color: C(0x3a3a3a), roughness: 0.8 });
+      var mFace = P({ color: C(0x1a1a1a), roughness: 0.5, metalness: 0.25 });
+      var mMetal = P({ color: C(0x2b2d31), metalness: 0.7, roughness: 0.38 });
+      var mBezel = P({ color: C(0x1b1c1f), metalness: 0.3, roughness: 0.45 });
+      var mBack = P({ color: C(0x3a3c40), metalness: 0.4, roughness: 0.5 });
+      var mFrame = P({ color: C(0x7b7f85), metalness: 0.5, roughness: 0.45 });
+      var mMag = P({ color: C(0x44474c), metalness: 0.7, roughness: 0.4 });
+      var mWall = new THREE.MeshStandardMaterial({ color: C(0xcfc3ad), roughness: 0.96 });
+      var mFloor = new THREE.MeshStandardMaterial({ color: C(0x8d8478), roughness: 0.9 });
+      var mDesk = new THREE.MeshPhysicalMaterial({ map: woodTexture(), roughness: 0.55, clearcoat: 0.15, clearcoatRoughness: 0.5 });
+      var mKey = P({ color: C(0xe9e6e0), roughness: 0.7 });
+      var mKeyBase = P({ color: C(0xcfcbc4), roughness: 0.6, metalness: 0.2 });
+      var mMug = P({ color: C(0x2f5d50), roughness: 0.35, clearcoat: 0.6 });
+      var mScreen = new THREE.MeshBasicMaterial({ map: screenTexture(), toneMapped: false });
+      var mChamber = new THREE.MeshStandardMaterial({ color: C(0xb4532a), transparent: true, opacity: 0.3, depthWrite: false, side: THREE.DoubleSide });
       var mMask = new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false, side: THREE.FrontSide, stencilWrite: true, stencilRef: 1, stencilFunc: THREE.AlwaysStencilFunc, stencilZPass: THREE.ReplaceStencilOp });
 
-      var palette = (opts.colors || []).map(function (c) { return { color: new THREE.Color(c.hex), zh: c.zh, en: c.en }; });
+      function applyColor(c) { mCab.color.copy(c); mPaint.color.copy(c); mPaint2.color.copy(c).multiplyScalar(0.92); }
+      var palette = (opts.colors || []).map(function (c) { return { color: C(c.hex), zh: c.zh, en: c.en }; });
       var cIdx = 0, cT = 0, announced = false, lastT = performance.now(), tmpC = new THREE.Color();
       var HOLD = 3.5, FADE = 1.2;
-      function applyColor(c) {
-        mCab.color.copy(c); mW.color.copy(c); mWC.color.copy(c).multiplyScalar(0.94);
-        var e = c.clone().multiplyScalar(0.12); mW.emissive.copy(e); mWC.emissive.copy(e);
-      }
       if (palette.length) { applyColor(palette[0].color); if (opts.onColor) opts.onColor(palette[0]); }
 
       var state = { mode: 'single', toe: 25, xray: false };
@@ -875,71 +953,72 @@
         s.lineTo(x, y + r); s.absarc(x + r, y + r, r, Math.PI, 1.5 * Math.PI, false);
       }
       function lathe(pts, m) {
-        var o = new THREE.Mesh(new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), 72), m);
+        var o = new THREE.Mesh(new THREE.LatheGeometry(pts.map(function (p) { return new THREE.Vector2(p[0], p[1]); }), 96), m);
         o.rotation.x = Math.PI / 2; return o;
       }
       function roll(r1, r2, base, crown, m) {
         var pts = [];
-        for (var i = 0; i <= 20; i++) { var t = Math.PI * i / 20; pts.push([(r1 + r2) / 2 + (r2 - r1) / 2 * Math.cos(t), base + (crown - base) * Math.sin(t)]); }
+        for (var i = 0; i <= 24; i++) { var t = Math.PI * i / 24; pts.push([(r1 + r2) / 2 + (r2 - r1) / 2 * Math.cos(t), base + (crown - base) * Math.sin(t)]); }
         return lathe(pts, m);
       }
       function dome(r, m, z, sz) {
-        var o = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), m);
+        var o = new THREE.Mesh(new THREE.SphereGeometry(r, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), m);
         o.rotation.x = Math.PI / 2; o.scale.y = sz || 1; o.position.z = z; return o;
       }
-      function disc(r, m, z) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 72), m); o.position.z = z; return o; }
-      function ring(r1, r2, m, z) { var o = new THREE.Mesh(new THREE.RingGeometry(r1, r2, 72), m); o.position.z = z; return o; }
-      function tube(r, h, m, z0) { var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 72, 1, true), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
+      function disc(r, m, z) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 96), m); o.position.z = z; return o; }
+      function ring(r1, r2, m, z) { var o = new THREE.Mesh(new THREE.RingGeometry(r1, r2, 96), m); o.position.z = z; return o; }
+      function tube(r, h, m, z0) { var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 96, 1, true), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
       function cyl(r1, r2, z0, z1, m) { var h = z0 - z1; var o = new THREE.Mesh(new THREE.CylinderGeometry(r1, r2, h, 40), m); o.rotation.x = Math.PI / 2; o.position.z = z0 - h / 2; return o; }
-      function mask(r) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 72), mMask); o.position.z = 0.01; o.renderOrder = 1; return o; }
+      function mask(r) { var o = new THREE.Mesh(new THREE.CircleGeometry(r, 96), mMask); o.position.z = 0.01; o.renderOrder = 1; return o; }
 
       function woofer() {
         var g = new THREE.Group();
-        g.add(mask(4.7)); g.add(tube(4.7, 0.75, mW, 0)); g.add(roll(4.05, 4.7, -0.65, -0.08, mBlk));
-        g.add(lathe([[1.6, -2.0], [4.05, -0.62]], mWC)); g.add(dome(1.65, mW, -2.0, 0.5));
+        g.add(mask(4.7)); g.add(tube(4.7, 0.8, mPaint2, 0)); g.add(roll(4.05, 4.7, -0.7, -0.08, mRubber));
+        g.add(lathe([[1.6, -2.0], [4.05, -0.66]], mPaint)); g.add(dome(1.65, mPaint, -2.0, 0.5));
         g.add(cyl(5.25, 5.25, -WT, -WT - 0.4, mFrame)); g.add(cyl(4.4, 2.2, -WT - 0.4, -4.6, mFrame)); g.add(cyl(2.1, 2.1, -4.6, -6.7, mMag));
         return g;
       }
       function pr() {
         var g = new THREE.Group();
-        g.add(mask(4.7)); g.add(tube(4.7, 0.75, mW, 0)); g.add(roll(4.05, 4.7, -0.65, -0.08, mBlk));
-        g.add(lathe([[1.3, -1.25], [4.05, -0.62]], mWC)); g.add(disc(1.32, mW, -1.25));
+        g.add(mask(4.7)); g.add(tube(4.7, 0.8, mPaint2, 0)); g.add(roll(4.05, 4.7, -0.7, -0.08, mRubber));
+        g.add(lathe([[1.3, -1.25], [4.05, -0.66]], mPaint)); g.add(disc(1.32, mPaint, -1.25));
         g.add(cyl(5.25, 5.25, -WT, -WT - 0.4, mFrame)); g.add(cyl(4.4, 2.6, -WT - 0.4, -4.2, mFrame)); g.add(cyl(0.4, 0.4, -4.2, -5.6, mMag));
         return g;
       }
       function mid() {
         var g = new THREE.Group();
-        g.add(mask(2.5)); g.add(tube(2.5, 0.6, mW, 0)); g.add(roll(1.95, 2.5, -0.5, -0.06, mBlk));
-        g.add(lathe([[0.75, -1.35], [1.95, -0.48]], mAl)); g.add(dome(0.75, mAl, -1.35, 0.5));
+        g.add(mask(2.5)); g.add(tube(2.5, 0.6, mPaint2, 0)); g.add(roll(1.95, 2.5, -0.5, -0.06, mRubber));
+        g.add(lathe([[0.75, -1.35], [1.95, -0.48]], mAl)); g.add(dome(0.75, mDarkAl, -1.35, 0.5));
         var f = new THREE.Mesh(new THREE.BoxGeometry(5.6, 5.6, 0.4), mFrame); f.position.z = -WT - 0.2; g.add(f);
         g.add(cyl(1.7, 1.7, -WT - 0.4, -3.8, mMag));
         return g;
       }
-      /* Tweeter: faceplate sits in a recess, its face flush with the baffle (z = 0). */
+      /* Tweeter: round faceplate recessed so its face sits flush with the baffle. */
       function tw() {
         var g = new THREE.Group();
         g.add(mask(3.3));
-        g.add(tube(3.3, 0.35, mDark, 0));
-        g.add(ring(1.7, 3.3, mDark, -0.01));
-        g.add(ring(1.45, 1.7, mBlk, -0.02));
-        g.add(dome(1.45, mDome, -0.55, 0.55));
+        g.add(tube(3.3, 0.4, mFace, 0));
+        g.add(ring(1.75, 3.3, mFace, -0.02));
+        g.add(tube(1.75, 0.35, mFace, -0.02));
+        g.add(ring(1.5, 1.75, mRubber, -0.37));
+        g.add(dome(1.5, mSilk, -0.37, 0.55));
         g.add(cyl(2.2, 2.2, -WT, -3.6, mMag));
         return g;
       }
       function aAt(z, a0, a1) { return a0 + (a1 - a0) * (D / 2 - z) / D; }
 
       function speaker(side) {
-        var g = new THREE.Group(), a0 = W0 / 2, a1 = W1 / 2;
-        var sh = new THREE.Shape(); rr(sh, -a0, -H / 2, W0, H, R);
-        var geo = new THREE.ExtrudeGeometry(sh, { depth: D, bevelEnabled: false, curveSegments: 20 });
-        geo.translate(0, 0, -D / 2);
+        var g = new THREE.Group(), a0 = W0 / 2, a1 = W1 / 2, b = 0.35;
+        var sh = new THREE.Shape(); rr(sh, -a0 + b, -H / 2 + b, W0 - 2 * b, H - 2 * b, R - b);
+        var geo = new THREE.ExtrudeGeometry(sh, { depth: D - 2 * b, bevelEnabled: true, bevelThickness: b, bevelSize: b, bevelSegments: 4, curveSegments: 28 });
+        geo.translate(0, 0, -D / 2 + b);
         var p = geo.attributes.position;
         for (var i = 0; i < p.count; i++) {
-          var x = p.getX(i), z = p.getZ(i);
-          if (Math.abs(x) > 1e-6) p.setX(i, x + Math.sign(x) * (a1 - a0) * (D / 2 - z) / D);
+          var x = p.getX(i), z = p.getZ(i), t = Math.min(1, Math.max(0, (D / 2 - z) / D));
+          if (Math.abs(x) > 1e-6) p.setX(i, x + Math.sign(x) * (a1 - a0) * t);
         }
         geo.computeVertexNormals();
-        var cab = new THREE.Mesh(geo, mCab); cab.renderOrder = 2; g.add(cab);
+        var cab = new THREE.Mesh(geo, mCab); cab.renderOrder = 2; cab.castShadow = true; cab.receiveShadow = true; g.add(cab);
 
         var fz = D / 2;
         var t = tw(); t.position.set(0, TY, fz); g.add(t);
@@ -959,27 +1038,43 @@
         return g;
       }
 
-      function box(w, h, d, m, x, y, z) { var o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z); return o; }
+      function box(w, h, d, m, x, y, z) {
+        var o = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); o.position.set(x, y, z);
+        o.castShadow = true; o.receiveShadow = true; return o;
+      }
+      function rbox(w, h, d, r, m) {
+        var s = new THREE.Shape(); rr(s, -w / 2, -d / 2, w, d, r);
+        var g = new THREE.ExtrudeGeometry(s, { depth: h, bevelEnabled: true, bevelThickness: 0.15, bevelSize: 0.15, bevelSegments: 3, curveSegments: 12 });
+        g.rotateX(-Math.PI / 2);
+        var o = new THREE.Mesh(g, m); o.castShadow = true; o.receiveShadow = true; return o;
+      }
       function rod(a, b, r, m) {
         var v = new THREE.Vector3().subVectors(b, a);
-        var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, v.length(), 24), m);
+        var o = new THREE.Mesh(new THREE.CylinderGeometry(r, r, v.length(), 32), m);
         o.position.copy(a).addScaledVector(v, 0.5);
-        o.quaternion.setFromUnitVectors(V(0, 1, 0), v.clone().normalize()); return o;
+        o.quaternion.setFromUnitVectors(V(0, 1, 0), v.clone().normalize()); o.castShadow = true; return o;
       }
       function clamp(g, x) {
         g.add(box(6, 0.8, 8, mMetal, x, 0.4, DESK_R + 4)); g.add(box(6, 7.6, 1, mMetal, x, -3, DESK_R - 0.5));
-        g.add(box(6, 0.8, 6, mMetal, x, -6.4, DESK_R + 3)); g.add(rod(V(x, -9, DESK_R + 4), V(x, -2.6, DESK_R + 4), 0.45, mMetal));
+        g.add(box(6, 0.8, 6, mMetal, x, -6.4, DESK_R + 3));
       }
       function env(g) {
-        g.add(box(400, 200, 1, mWall, 0, 60, -0.5)); g.add(box(170, 2.5, 75, mDesk, 0, -1.25, DESK_R + 37.5));
-        g.add(box(72.8, 41.8, 2, mGray, 0, MON_Y, ZF - 1));
-        var s = new THREE.Mesh(new THREE.PlaneGeometry(70.8, 39.8), mScr); s.position.set(0, MON_Y, ZF + 0.01); g.add(s);
-        g.add(box(44, 26, 4, mGray, 0, MON_Y, ZF - 4)); g.add(box(10, 10, 0.6, mMetal, 0, MON_Y, ZF - 6.3));
+        var wall = new THREE.Mesh(new THREE.PlaneGeometry(600, 300), mWall); wall.position.set(0, 80, 0); wall.receiveShadow = true; g.add(wall);
+        var floor = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), mFloor); floor.rotation.x = -Math.PI / 2; floor.position.y = -74; floor.receiveShadow = true; g.add(floor);
+        g.add(box(170, 3, 75, mDesk, 0, -1.5, DESK_R + 37.5));
+        [-80, 80].forEach(function (x) { g.add(box(4, 72, 60, mKeyBase, x, -39, DESK_R + 38)); });
+        g.add(box(72.6, 41.6, 1.2, mBezel, 0, MON_Y, ZF - 0.6));
+        var scr = new THREE.Mesh(new THREE.PlaneGeometry(70.6, 39.6), mScreen); scr.position.set(0, MON_Y, ZF + 0.02); g.add(scr);
+        g.add(box(44, 26, 3.5, mBack, 0, MON_Y, ZF - 2.9)); g.add(box(10, 10, 0.6, mMetal, 0, MON_Y, ZF - 5));
         clamp(g, 0);
         var px = DESK_R + 4;
         g.add(rod(V(0, 0.8, px), V(0, 46, px), 1.6, mMetal));
         var j1 = V(16, 43, px + 5), j2 = V(10, MON_Y + 2, ZF - 8);
-        g.add(rod(V(0, 43, px), j1, 1.3, mMetal)); g.add(rod(j1, j2, 1.2, mMetal)); g.add(rod(j2, V(0, MON_Y, ZF - 6.6), 1.0, mMetal));
+        g.add(rod(V(0, 43, px), j1, 1.3, mMetal)); g.add(rod(j1, j2, 1.2, mMetal)); g.add(rod(j2, V(0, MON_Y, ZF - 5.3), 1.0, mMetal));
+        var kb = rbox(36, 1.6, 12.5, 1, mKeyBase); kb.position.set(-4, 0, DESK_R + 52); g.add(kb);
+        for (var r = 0; r < 5; r++) for (var c = 0; c < 15; c++) g.add(box(1.9, 0.7, 1.9, mKey, -20.8 + c * 2.4, 1.9, DESK_R + 47.6 + r * 2.25));
+        var mouse = new THREE.Mesh(new THREE.SphereGeometry(3, 32, 16), mKey); mouse.scale.set(0.85, 0.45, 1.3); mouse.position.set(24, 0.6, DESK_R + 53); mouse.castShadow = true; g.add(mouse);
+        var mug = new THREE.Mesh(new THREE.CylinderGeometry(3.2, 3, 8.5, 40), mMug); mug.position.set(50, 4.25, DESK_R + 42); mug.castShadow = true; g.add(mug);
       }
 
       function build() {
@@ -1014,23 +1109,24 @@
         var toTar = V(v.target[0], v.target[1], v.target[2]);
         var z = (v.mode === 'single' && opts.zoom) ? opts.zoom : 1;
         var toPos = V(v.pos[0], v.pos[1], v.pos[2]).sub(toTar).multiplyScalar(z).add(toTar);
-        if (!animate || rebuild) {
-          camera.position.copy(toPos); controls.target.copy(toTar); controls.update(); fly = null; return;
-        }
+        if (!animate || rebuild) { camera.position.copy(toPos); controls.target.copy(toTar); controls.update(); fly = null; return; }
         fly = { t: 0, fromPos: camera.position.clone(), fromTar: controls.target.clone(), toPos: toPos, toTar: toTar };
       }
+      function zoomBy(f) {
+        fly = null;
+        var off = camera.position.clone().sub(controls.target);
+        off.setLength(Math.min(400, Math.max(25, off.length() * f)));
+        camera.position.copy(controls.target).add(off); controls.update();
+      }
       function resize() {
-        var w = el.clientWidth, h = el.clientHeight;
-        if (!w || !h) return;
+        var w = el.clientWidth, h = el.clientHeight; if (!w || !h) return;
         renderer.setSize(w, h); camera.aspect = w / h; camera.updateProjectionMatrix();
       }
       window.addEventListener('resize', resize);
       goTo(opts.view || 'overview', false); resize();
 
       var visible = true;
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(el);
-      }
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (es) { visible = es[0].isIntersecting; }).observe(el);
       (function loop() {
         requestAnimationFrame(loop);
         var now = performance.now(), dt = Math.min(0.1, (now - lastT) / 1000); lastT = now;
@@ -1059,14 +1155,6 @@
         controls.update(); renderer.render(scene, camera);
       })();
 
-      function zoomBy(f) {
-        fly = null;
-        var off = camera.position.clone().sub(controls.target);
-        var len = Math.min(400, Math.max(25, off.length() * f));
-        camera.position.copy(controls.target).add(off.setLength(len));
-        controls.update();
-      }
-
       return {
         goTo: goTo,
         zoomBy: zoomBy,
@@ -1082,10 +1170,10 @@
         colors: [
           { hex: 0xf1efea, zh: '霧白', en: 'Chalk White' },
           { hex: 0x2e2f31, zh: '石墨黑', en: 'Graphite' },
-          { hex: 0x66745a, zh: '鼠尾草綠', en: 'Sage' },
-          { hex: 0x506a85, zh: '霧藍', en: 'Dusk Blue' },
-          { hex: 0xb2552e, zh: '陶土橘', en: 'Terracotta' },
-          { hex: 0xb9a17a, zh: '砂岩米', en: 'Sandstone' }
+          { hex: 0x7f8c70, zh: '鼠尾草綠', en: 'Sage' },
+          { hex: 0x5f7a96, zh: '霧藍', en: 'Dusk Blue' },
+          { hex: 0xb75b33, zh: '陶土橘', en: 'Terracotta' },
+          { hex: 0xc9b18a, zh: '砂岩米', en: 'Sandstone' }
         ],
         onColor: function (c) {
           if (heroColor) heroColor.innerHTML = '<span class="zh">' + (window.csConvert ? window.csConvert(c.zh) : c.zh) + '</span><span class="en">' + c.en + '</span>';
