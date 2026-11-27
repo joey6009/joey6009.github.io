@@ -1127,7 +1127,7 @@
         g.add(box(6, 0.8, 8, mMetal, x, 0.4, DESK_R + 4)); g.add(box(6, 7.6, 1, mMetal, x, -3, DESK_R - 0.5));
         g.add(box(6, 0.8, 6, mMetal, x, -6.4, DESK_R + 3));
       }
-      function env(g) {
+      function env(g, toe) {
         var wall = new THREE.Mesh(new THREE.PlaneGeometry(600, 300), mWall); wall.position.set(0, 80, 0); wall.receiveShadow = true; g.add(wall);
         var floor = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), mFloor); floor.rotation.x = -Math.PI / 2; floor.position.y = -74; floor.receiveShadow = true; g.add(floor);
         g.add(box(205, 3, 75, mDesk, 12, -1.5, DESK_R + 37.5));
@@ -1147,8 +1147,12 @@
         vm.add(box(22, 30, 3, mBack, 0, 0, -2.6));
         vm.add(box(6, 28, 2.5, mMetal, 0, -19, -6));
         vm.add(box(24, 1, 18, mMetal, 0, -33.7 + 0.5, -4));
-        vm.position.set(76, 34.2, ZF - 3);
-        vm.rotation.y = -0.44;
+        /* Screen sits in the same plane as the R speaker's front baffle, 1.5 cm beside it. */
+        var th = (toe || 25) * Math.PI / 180, c0 = Math.cos(th), s0 = Math.sin(th), a0 = W0 / 2;
+        var spX = 36.4 + 1.5 + a0 * c0 + (D / 2) * s0, spZ = ZF - (-a0 * s0 + (D / 2) * c0);
+        var along = a0 + 1.5 + 15.6;
+        vm.position.set(spX + c0 * along - s0 * (D / 2), MON_Y - H / 2 + 27.2, spZ + s0 * along + c0 * (D / 2));
+        vm.rotation.y = -th;
         g.add(vm);
         var kb = rbox(36, 1.6, 12.5, 1, mKeyBase); kb.position.set(-4, 0, DESK_R + 52); g.add(kb);
         for (var r = 0; r < 5; r++) for (var c = 0; c < 15; c++) g.add(box(1.9, 0.7, 1.9, mKey, -20.8 + c * 2.4, 1.9, DESK_R + 47.6 + r * 2.25));
@@ -1163,7 +1167,7 @@
         if (state.mode !== 'pair') {
           root.add(speaker(1));
         } else {
-          env(root);
+          env(root, state.toe);
           var th = state.toe * Math.PI / 180, YS = MON_Y + LIFT, a0 = W0 / 2, c = Math.cos(th), s = Math.sin(th);
           var cx = 36.4 + 1.5 + a0 * c + (D / 2) * s, cz = ZF - (-a0 * s + (D / 2) * c);
           [[1, -th], [-1, th]].forEach(function (it) {
